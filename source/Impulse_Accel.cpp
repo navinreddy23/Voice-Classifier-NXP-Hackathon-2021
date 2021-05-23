@@ -81,29 +81,30 @@ int main(void) {
 	signal_t signal;
 	numpy::signal_from_buffer(&raw_features[0], size, &signal);
 
-//    EI_IMPULSE_ERROR res = run_classifier(&signal, &result, true);
-//    printf("run_classifier returned: %d\n", res);
+    EI_IMPULSE_ERROR res = run_classifier(&signal, &result, true);
+
+    PRINTF("run_classifier returned: %d\r\n", res);
 
 	PRINTF("[");
-    for (size_t ix = 0; ix < EI_CLASSIFIER_LABEL_COUNT; ix++) {
+    for (size_t ix = 0; ix < EI_CLASSIFIER_LABEL_COUNT; ix++)
+    {
     	PRINTF("%.5f", result.classification[ix].value);
 #if EI_CLASSIFIER_HAS_ANOMALY == 1
         printf(", ");
 #else
-        if (ix != EI_CLASSIFIER_LABEL_COUNT - 1) {
+        if (ix != EI_CLASSIFIER_LABEL_COUNT - 1)
+        {
         	PRINTF(", ");
         }
 #endif
     }
 
-    /* Force the counter to be placed into memory. */
-    volatile static int i = 0 ;
-    /* Enter an infinite loop, just incrementing a counter. */
-    while(1) {
-        i++ ;
-        /* 'Dummy' NOP to allow source level single stepping of
-            tight while() loop */
+    PRINTF("]\n");
+
+    while(1)
+    {
         __asm volatile ("nop");
     }
+
     return 0 ;
 }
