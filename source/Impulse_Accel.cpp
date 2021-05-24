@@ -61,7 +61,7 @@ int main(void) {
     BOARD_InitDebugConsole();
 #endif
 
-    PRINTF("\r\nHello World - Impulse Accel project - Includes added\r\n");
+    PRINTF("\r\nHello World - Impulse KWS project - Includes added\r\n");
 
     if ( ( sizeof(raw_features) / sizeof(float))  != EI_CLASSIFIER_DSP_INPUT_FRAME_SIZE)
     {
