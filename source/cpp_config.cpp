@@ -97,23 +97,23 @@ EI_IMPULSE_ERROR ei_run_impulse_check_canceled()
 
 void ei_printf(const char *format, ...)
 {
-//	static char buffer[400];
-//	// Write the string to the buffer
-//	int len = 0;
-//	va_list args;
-//	va_start(args, format);
-//	len = vsprintf(buffer, format, args);
-//	buffer[len] = '\r';
-//	buffer[len+1] = '\n';
-//	buffer[len+2] = '\0';
-//	va_end(args);
-//
-//	PRINTF(buffer);
+	static char buffer[400];
+	// Write the string to the buffer
+	int len = 0;
+	va_list args;
+	va_start(args, format);
+	len = vsprintf(buffer, format, args);
+	buffer[len] = '\r';
+	buffer[len+1] = '\n';
+	buffer[len+2] = '\0';
+	va_end(args);
+
+	PRINTF(buffer);
 }
 
 void ei_printf_float(float f)
 {
-//	PRINTF("%f", f);
+	PRINTF("%f", f);
 }
 
 extern "C" int __aeabi_atexit(void *object,
