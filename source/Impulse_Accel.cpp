@@ -40,6 +40,7 @@
 #include "MIMXRT1021.h"
 #include "fsl_debug_console.h"
 #include "edge-impulse-sdk/classifier/ei_run_classifier.h"
+#include "audio.h"
 /* TODO: insert other include files here. */
 
 /* TODO: insert other definitions and declarations here. */
