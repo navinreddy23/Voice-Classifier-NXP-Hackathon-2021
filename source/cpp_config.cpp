@@ -60,6 +60,11 @@ void operator delete[](void *p)
     free(p);
 }
 
+void DebugLog(const char* s)
+{
+
+}
+
 void *ei_malloc(size_t size)
 {
 	return malloc(size);

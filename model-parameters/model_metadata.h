@@ -41,40 +41,40 @@
 #define EI_CLASSIFIER_DATATYPE_FLOAT32           1
 #define EI_CLASSIFIER_DATATYPE_INT8              9
 
-#define EI_CLASSIFIER_PROJECT_ID                 26811
+#define EI_CLASSIFIER_PROJECT_ID                 32845
 #define EI_CLASSIFIER_PROJECT_OWNER              "Duke"
-#define EI_CLASSIFIER_PROJECT_NAME               "arduino_accel"
-#define EI_CLASSIFIER_PROJECT_DEPLOY_VERSION     14
-#define EI_CLASSIFIER_NN_INPUT_FRAME_SIZE        33
-#define EI_CLASSIFIER_RAW_SAMPLE_COUNT           125
-#define EI_CLASSIFIER_RAW_SAMPLES_PER_FRAME      3
+#define EI_CLASSIFIER_PROJECT_NAME               "My-KWS"
+#define EI_CLASSIFIER_PROJECT_DEPLOY_VERSION     1
+#define EI_CLASSIFIER_NN_INPUT_FRAME_SIZE        735
+#define EI_CLASSIFIER_RAW_SAMPLE_COUNT           16000
+#define EI_CLASSIFIER_RAW_SAMPLES_PER_FRAME      1
 #define EI_CLASSIFIER_DSP_INPUT_FRAME_SIZE       (EI_CLASSIFIER_RAW_SAMPLE_COUNT * EI_CLASSIFIER_RAW_SAMPLES_PER_FRAME)
 #define EI_CLASSIFIER_INPUT_WIDTH                0
 #define EI_CLASSIFIER_INPUT_HEIGHT               0
-#define EI_CLASSIFIER_INTERVAL_MS                16
-#define EI_CLASSIFIER_LABEL_COUNT                4
+#define EI_CLASSIFIER_INTERVAL_MS                0.0625
+#define EI_CLASSIFIER_LABEL_COUNT                14
 #define EI_CLASSIFIER_HAS_ANOMALY                0
-#define EI_CLASSIFIER_FREQUENCY                  62.5
+#define EI_CLASSIFIER_FREQUENCY                  16000
 #define EI_CLASSIFIER_USE_QUANTIZED_DSP_BLOCK    0
 
 
 #define EI_CLASSIFIER_OBJECT_DETECTION           0
 
 
-#define EI_CLASSIFIER_TFLITE_ARENA_SIZE          3808
-#define EI_CLASSIFIER_TFLITE_INPUT_DATATYPE      EI_CLASSIFIER_DATATYPE_FLOAT32
-#define EI_CLASSIFIER_TFLITE_INPUT_QUANTIZED     0
-#define EI_CLASSIFIER_TFLITE_INPUT_SCALE         0
-#define EI_CLASSIFIER_TFLITE_INPUT_ZEROPOINT     0
-#define EI_CLASSIFIER_TFLITE_OUTPUT_DATATYPE     EI_CLASSIFIER_DATATYPE_FLOAT32
-#define EI_CLASSIFIER_TFLITE_OUTPUT_QUANTIZED    0
-#define EI_CLASSIFIER_TFLITE_OUTPUT_SCALE        0
-#define EI_CLASSIFIER_TFLITE_OUTPUT_ZEROPOINT    0
+#define EI_CLASSIFIER_TFLITE_ARENA_SIZE          19475
+#define EI_CLASSIFIER_TFLITE_INPUT_DATATYPE      EI_CLASSIFIER_DATATYPE_INT8
+#define EI_CLASSIFIER_TFLITE_INPUT_QUANTIZED     1
+#define EI_CLASSIFIER_TFLITE_INPUT_SCALE         0.051395297050476074
+#define EI_CLASSIFIER_TFLITE_INPUT_ZEROPOINT     -1
+#define EI_CLASSIFIER_TFLITE_OUTPUT_DATATYPE     EI_CLASSIFIER_DATATYPE_INT8
+#define EI_CLASSIFIER_TFLITE_OUTPUT_QUANTIZED    1
+#define EI_CLASSIFIER_TFLITE_OUTPUT_SCALE        0.00390625
+#define EI_CLASSIFIER_TFLITE_OUTPUT_ZEROPOINT    -128
 #define EI_CLASSIFIER_INFERENCING_ENGINE         EI_CLASSIFIER_TFLITE
-#define EI_CLASSIFIER_COMPILED                   1
+#define EI_CLASSIFIER_COMPILED                   0
 #define EI_CLASSIFIER_HAS_TFLITE_OPS_RESOLVER    1
 
-#define EI_CLASSIFIER_SENSOR                     EI_CLASSIFIER_SENSOR_ACCELEROMETER
+#define EI_CLASSIFIER_SENSOR                     EI_CLASSIFIER_SENSOR_MICROPHONE
 #ifndef EI_CLASSIFIER_SLICES_PER_MODEL_WINDOW
 #define EI_CLASSIFIER_SLICES_PER_MODEL_WINDOW    4
 #endif // EI_CLASSIFIER_SLICES_PER_MODEL_WINDOW
@@ -90,7 +90,7 @@
 #endif
 #endif // EI_CLASSIFIER_INFERENCING_ENGINE == EI_CLASSIFIER_TFLITE && EI_CLASSIFIER_USE_FULL_TFLITE == 1
 
-const char* ei_classifier_inferencing_categories[] = { "circle", "idle", "left-right", "up-down" };
+const char* ei_classifier_inferencing_categories[] = { "background", "brighter", "dimmer", "down", "go", "left", "no", "off", "on", "right", "stop", "unknown", "up", "yes" };
 
 typedef struct {
     uint16_t implementation_version;
@@ -179,17 +179,19 @@ typedef struct {
     bool invert_features;
 } ei_dsp_config_audio_syntiant_t;
 
-ei_dsp_config_spectral_analysis_t ei_dsp_config_3 = {
+ei_dsp_config_mfcc_t ei_dsp_config_3 = {
+    2,
     1,
-    3,
-    1.00000f,
-    "low",
-    3.00000f,
-    6,
-    128,
-    3,
-    0.10000f,
-    "0.1, 0.5, 1.0, 2.0, 5.0"
+    15,
+    0.04000f,
+    0.02000f,
+    40,
+    512,
+    101,
+    300,
+    4000,
+    0.98000f,
+    1
 };
 
 #endif // _EI_CLASSIFIER_MODEL_METADATA_H_

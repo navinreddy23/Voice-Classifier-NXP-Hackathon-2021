@@ -19,25 +19,16 @@
 * SOFTWARE.
 */
 
-#ifndef _EI_CLASSIFIER_DSP_BLOCKS_H_
-#define _EI_CLASSIFIER_DSP_BLOCKS_H_
+#ifndef _EI_CLASSIFIER_TFLITE_RESOLVER_H_
+#define _EI_CLASSIFIER_TFLITE_RESOLVER_H_
 
-#include "model-parameters/model_metadata.h"
-#include "edge-impulse-sdk/classifier/ei_run_dsp.h"
-#include "edge-impulse-sdk/classifier/ei_model_types.h"
+#include "edge-impulse-sdk/tensorflow/lite/micro/kernels/micro_ops.h"
 
-const size_t ei_dsp_blocks_size = 1;
-ei_model_dsp_t ei_dsp_blocks[ei_dsp_blocks_size] = {
-    { // DSP block 3
-        735,
-        &extract_mfcc_features,
-        (void*)&ei_dsp_config_3
-    }
-};
+#define EI_TFLITE_RESOLVER static tflite::MicroMutableOpResolver<5> resolver; \
+    resolver.AddConv2D(); \
+    resolver.AddFullyConnected(); \
+    resolver.AddMaxPool2D(); \
+    resolver.AddReshape(); \
+    resolver.AddSoftmax();
 
-const size_t ei_dsp_blocks_i16_size = 0;
-ei_model_dsp_i16_t ei_dsp_blocks_i16[ei_dsp_blocks_i16_size] = {
-
-};
-
-#endif // _EI_CLASSIFIER_DSP_BLOCKS_H_
+#endif // _EI_CLASSIFIER_TFLITE_RESOLVER_H_
