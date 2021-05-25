@@ -14,6 +14,11 @@
 extern "C" {
 #endif /* __cplusplus */
 
+#define AUDIO_SAMPLES 16U
+#define AUDIO_RES	  2U
+#define AUDIO_NUM	  (AUDIO_SAMPLES*AUDIO_RES)
+#define BUFFER_SIZE   (20000U)
+
 typedef void(*cb_rx_t)(uint8_t*);
 /*******************************************************************************
  * Prototypes
