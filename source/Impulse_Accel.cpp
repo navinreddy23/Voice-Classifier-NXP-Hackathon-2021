@@ -62,7 +62,7 @@ void callback_on_rx(uint8* buffer)
 	g_buf = (int16_t*)buffer;
 	isReady = true;
 
-    AUDIO_Transfer(buffer);
+    //AUDIO_Transfer(buffer);
 }
 
 /*
@@ -118,7 +118,7 @@ int main(void) {
 
         		for (size_t ix = 0; ix < EI_CLASSIFIER_LABEL_COUNT; ix++)
         		{
-        			if(ix != 0 && result.classification[ix].value > 0.8)
+        			if(ix != 0 && result.classification[ix].value > 0.3)
         			{
         				PRINTF("    %s: %f\r\n", result.classification[ix].label, result.classification[ix].value);
         			}
