@@ -87,7 +87,9 @@ uint64_t ei_read_timer_us()
 
 uint64_t ei_read_timer_ms()
 {
-	return 0;
+	static uint64_t i = 0;
+	i += 10;
+	return i;
 }
 
 EI_IMPULSE_ERROR ei_run_impulse_check_canceled()

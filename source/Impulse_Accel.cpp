@@ -94,27 +94,38 @@ int main(void) {
     		AUDIO_Receive();
     		isReady = !isReady;
 
-    		signal_t signal;
-    		signal.total_length = EI_CLASSIFIER_RAW_SAMPLE_COUNT;
-    		signal.get_data = &microphone_audio_signal_get_data;
-    		//numpy::signal_from_buffer(&features[0], EI_CLASSIFIER_RAW_SAMPLE_COUNT, &signal);
-    		ei_impulse_result_t result = { 0 };
-
-    		EI_IMPULSE_ERROR r = run_classifier_continuous(&signal, &result, false);
-    		if (r != EI_IMPULSE_OK) {
-    			ei_printf("ERR: Failed to run classifier (%d)\n", r);
-    			break;
-    		}
-
-    		PRINTF("Predictions ");
-    		PRINTF("(DSP: %d ms., Classification: %d ms., Anomaly: %d ms.)",
-    			result.timing.dsp, result.timing.classification, result.timing.anomaly);
-    		PRINTF(": \r\n");
-
-    		for (size_t ix = 0; ix < EI_CLASSIFIER_LABEL_COUNT; ix++)
+    		PRINTF("New sample\r\n");
+    		for(uint8_t i = 0; i < 3; i++)
     		{
-    			PRINTF("    %s: %f\r\n", result.classification[ix].label, result.classification[ix].value);
+        		signal_t signal;
+        		signal.total_length = EI_CLASSIFIER_RAW_SAMPLE_COUNT;
+        		signal.get_data = &microphone_audio_signal_get_data;
+        		//numpy::signal_from_buffer(&features[0], EI_CLASSIFIER_RAW_SAMPLE_COUNT, &signal);
+        		ei_impulse_result_t result = { 0 };
+
+        		EI_IMPULSE_ERROR r = run_classifier(&signal, &result, false);
+        		if (r != EI_IMPULSE_OK) {
+        			ei_printf("ERR: Failed to run classifier (%d)\n", r);
+        			break;
+        		}
+
+        		PRINTF("Predictions ");
+        		PRINTF("(DSP: %d ms., Classification: %d ms., Anomaly: %d ms.)",
+        			result.timing.dsp, result.timing.classification, result.timing.anomaly);
+        		PRINTF(": \r\n");
+
+        		for (size_t ix = 0; ix < EI_CLASSIFIER_LABEL_COUNT; ix++)
+        		{
+        			if(ix != 0 && result.classification[ix].value > 0.8)
+        			{
+        				PRINTF("    %s: %f\r\n", result.classification[ix].label, result.classification[ix].value);
+        			}
+        		}
+
+        		g_buf += ( (AUDIO_NUM*BUFFER_SIZE) / 4);
     		}
+
+
     	}
     }
 
