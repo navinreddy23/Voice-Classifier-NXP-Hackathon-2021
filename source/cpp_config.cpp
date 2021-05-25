@@ -39,6 +39,7 @@
 #include <stdarg.h>
 #include "ei_classifier_porting.h"
 #include "fsl_debug_console.h"
+#include "timer.h"
 
 void *operator new(size_t size)
 {
@@ -87,9 +88,7 @@ uint64_t ei_read_timer_us()
 
 uint64_t ei_read_timer_ms()
 {
-	static uint64_t i = 0;
-	i += 10;
-	return i;
+	return TIMER_GetTimeInMs();
 }
 
 EI_IMPULSE_ERROR ei_run_impulse_check_canceled()

@@ -41,6 +41,7 @@
 #include "fsl_debug_console.h"
 #include "edge-impulse-sdk/classifier/ei_run_classifier.h"
 #include "audio.h"
+#include "timer.h"
 /* TODO: insert other include files here. */
 
 /* TODO: insert other definitions and declarations here. */
@@ -81,6 +82,7 @@ int main(void) {
 #endif
 
     USER_LED_INIT(1);
+    TIMER_Init();
 
     AUDIO_Init();
     AUDIO_SetCallBack(callback_on_rx);
@@ -124,8 +126,6 @@ int main(void) {
 
         		g_buf += ( (AUDIO_NUM*BUFFER_SIZE) / 4);
     		}
-
-
     	}
     }
 
