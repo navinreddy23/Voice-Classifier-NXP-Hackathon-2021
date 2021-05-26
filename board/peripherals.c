@@ -52,7 +52,8 @@ instance:
 - peripheral: 'NVIC'
 - config_sets:
   - nvic:
-    - interrupt_table: []
+    - interrupt_table:
+      - 0: []
     - interrupts: []
  * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS **********/
 /* clang-format on */
@@ -62,11 +63,608 @@ static void NVIC_init(void) {
 } */
 
 /***********************************************************************************************************************
+ * LPUART1 initialization code
+ **********************************************************************************************************************/
+/* clang-format off */
+/* TEXT BELOW IS USED AS SETTING FOR TOOLS *************************************
+instance:
+- name: 'LPUART1'
+- type: 'lpuart'
+- mode: 'polling'
+- custom_name_enabled: 'false'
+- type_id: 'lpuart_54a65a580e3462acdbacefd5299e0cac'
+- functional_group: 'BOARD_InitPeripherals'
+- peripheral: 'LPUART1'
+- config_sets:
+  - lpuartConfig_t:
+    - lpuartConfig:
+      - clockSource: 'LpuartClock'
+      - lpuartSrcClkFreq: 'BOARD_BootClockRUN'
+      - baudRate_Bps: '115200'
+      - parityMode: 'kLPUART_ParityDisabled'
+      - dataBitsCount: 'kLPUART_EightDataBits'
+      - isMsb: 'false'
+      - stopBitCount: 'kLPUART_OneStopBit'
+      - txFifoWatermark: '0'
+      - rxFifoWatermark: '1'
+      - enableRxRTS: 'false'
+      - enableTxCTS: 'false'
+      - txCtsSource: 'kLPUART_CtsSourcePin'
+      - txCtsConfig: 'kLPUART_CtsSampleAtStart'
+      - rxIdleType: 'kLPUART_IdleTypeStartBit'
+      - rxIdleConfig: 'kLPUART_IdleCharacter1'
+      - enableTx: 'true'
+      - enableRx: 'true'
+    - quick_selection: 'QuickSelection1'
+ * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS **********/
+/* clang-format on */
+const lpuart_config_t LPUART1_config = {
+  .baudRate_Bps = 115200UL,
+  .parityMode = kLPUART_ParityDisabled,
+  .dataBitsCount = kLPUART_EightDataBits,
+  .isMsb = false,
+  .stopBitCount = kLPUART_OneStopBit,
+  .txFifoWatermark = 0U,
+  .rxFifoWatermark = 1U,
+  .enableRxRTS = false,
+  .enableTxCTS = false,
+  .txCtsSource = kLPUART_CtsSourcePin,
+  .txCtsConfig = kLPUART_CtsSampleAtStart,
+  .rxIdleType = kLPUART_IdleTypeStartBit,
+  .rxIdleConfig = kLPUART_IdleCharacter1,
+  .enableTx = true,
+  .enableRx = true
+};
+
+static void LPUART1_init(void) {
+  LPUART_Init(LPUART1_PERIPHERAL, &LPUART1_config, LPUART1_CLOCK_SOURCE);
+}
+
+/***********************************************************************************************************************
+ * SAI1 initialization code
+ **********************************************************************************************************************/
+/* clang-format off */
+/* TEXT BELOW IS USED AS SETTING FOR TOOLS *************************************
+instance:
+- name: 'SAI1'
+- type: 'sai'
+- mode: 'interrupts'
+- custom_name_enabled: 'false'
+- type_id: 'sai_37a0d4b4ecc2db8ea149dbe2026c6550'
+- functional_group: 'BOARD_InitPeripherals'
+- peripheral: 'SAI1'
+- config_sets:
+  - fsl_sai:
+    - usage: 'record_playback'
+    - signal_config:
+      - 0:
+        - sourceTx: 'Tx'
+        - sourceRx: 'Tx'
+      - 1:
+        - sourceTx: 'Tx'
+        - sourceRx: 'Tx'
+    - syncSwapI: []
+    - bclkTxSetting: []
+    - bclkRxSetting: []
+    - syncTxSetting: []
+    - syncRxSetting: []
+    - whole:
+      - tx_group:
+        - sai_transceiver:
+          - bitClock:
+            - modeM: 'master'
+            - bitClockSource: 'kSAI_BclkSourceMclkOption1'
+            - bitClockSourceFreq: 'BOARD_BootClockRUN'
+            - bclkPolarityM: 'kSAI_PolarityActiveLow'
+            - bclkInputDelayM: 'false'
+          - frameSync:
+            - modeM: 'master'
+            - frameSyncWidthM: '16'
+            - frameSyncPolarityM: 'kSAI_PolarityActiveLow'
+            - frameSyncEarlyM: 'true'
+          - sampleRate_Hz: 'kSAI_SampleRate16KHz'
+          - channelMask: 'kSAI_Channel0Mask'
+          - serialData:
+            - dataMode: 'kSAI_DataPinStateTriState'
+            - differentFirstWord: 'false'
+            - sameDataWordLengthM: 'kSAI_WordWidth16bits'
+            - dataOrder: 'kSAI_DataMSB'
+            - dataFirstBitShiftedM: '16'
+            - dataWordNumM: '2'
+            - dataMasked_config:
+              - dataMasked_L:
+                - 0: 'false'
+                - 1: 'false'
+                - 2: 'false'
+                - 3: 'false'
+                - 4: 'false'
+                - 5: 'false'
+                - 6: 'false'
+                - 7: 'false'
+                - 8: 'false'
+                - 9: 'false'
+                - 10: 'false'
+                - 11: 'false'
+                - 12: 'false'
+                - 13: 'false'
+                - 14: 'false'
+                - 15: 'false'
+              - dataMasked_H:
+                - 0: 'false'
+                - 1: 'false'
+                - 2: 'false'
+                - 3: 'false'
+                - 4: 'false'
+                - 5: 'false'
+                - 6: 'false'
+                - 7: 'false'
+                - 8: 'false'
+                - 9: 'false'
+                - 10: 'false'
+                - 11: 'false'
+                - 12: 'false'
+                - 13: 'false'
+                - 14: 'false'
+                - 15: 'false'
+          - fifo:
+            - fifoWatermarkM: '16'
+            - fifoPacking: 'kSAI_FifoPackingDisabled'
+            - fifoContinueOneError: 'false'
+        - interrupt_sel: ''
+      - rx_group:
+        - sai_transceiver:
+          - bitClock:
+            - modeM: 'master'
+            - bitClockSource: 'kSAI_BclkSourceMclkDiv'
+            - bitClockSourceFreq: 'BOARD_BootClockRUN'
+            - bclkPolarityM: 'kSAI_PolarityActiveLow'
+            - bclkInputDelayM: 'false'
+          - frameSync:
+            - modeM: 'master'
+            - frameSyncWidthM: '16'
+            - frameSyncPolarityM: 'kSAI_PolarityActiveLow'
+            - frameSyncEarlyM: 'true'
+          - sampleRate_Hz: 'kSAI_SampleRate16KHz'
+          - channelMask: 'kSAI_Channel0Mask'
+          - serialData:
+            - dataMode: 'kSAI_DataPinStateTriState'
+            - differentFirstWord: 'false'
+            - sameDataWordLengthM: 'kSAI_WordWidth16bits'
+            - dataOrder: 'kSAI_DataMSB'
+            - dataFirstBitShiftedM: '16'
+            - dataWordNumM: '2'
+            - dataMasked_config:
+              - dataMasked_L:
+                - 0: 'false'
+                - 1: 'false'
+                - 2: 'false'
+                - 3: 'false'
+                - 4: 'false'
+                - 5: 'false'
+                - 6: 'false'
+                - 7: 'false'
+                - 8: 'false'
+                - 9: 'false'
+                - 10: 'false'
+                - 11: 'false'
+                - 12: 'false'
+                - 13: 'false'
+                - 14: 'false'
+                - 15: 'false'
+              - dataMasked_H:
+                - 0: 'false'
+                - 1: 'false'
+                - 2: 'false'
+                - 3: 'false'
+                - 4: 'false'
+                - 5: 'false'
+                - 6: 'false'
+                - 7: 'false'
+                - 8: 'false'
+                - 9: 'false'
+                - 10: 'false'
+                - 11: 'false'
+                - 12: 'false'
+                - 13: 'false'
+                - 14: 'false'
+                - 15: 'false'
+          - fifo:
+            - fifoWatermarkM: '16'
+            - fifoPacking: 'kSAI_FifoPackingDisabled'
+            - fifoContinueOneError: 'false'
+        - interrupt_sel: ''
+    - interrupt:
+      - IRQn: 'SAI1_IRQn'
+      - enable_interrrupt: 'enabled'
+      - enable_priority: 'false'
+      - priority: '0'
+      - enable_custom_name: 'false'
+ * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS **********/
+/* clang-format on */
+/* SAI1 Tx configuration */
+sai_transceiver_t SAI1_Tx_config = {
+  .masterSlave = kSAI_Master,
+  .bitClock = {
+    .bclkSrcSwap = false,
+    .bclkSource = kSAI_BclkSourceMclkOption1,
+    .bclkPolarity = kSAI_PolarityActiveLow,
+    .bclkInputDelay = false
+  },
+  .frameSync = {
+    .frameSyncWidth = 16U,
+    .frameSyncPolarity = kSAI_PolarityActiveLow,
+    .frameSyncEarly = true,
+  },
+  .syncMode = kSAI_ModeAsync,
+  .channelMask = kSAI_Channel0Mask,
+  .startChannel = 0U,
+  .endChannel = 0U,
+  .channelNums = 1U,
+  .serialData = {
+    .dataMode = kSAI_DataPinStateTriState,
+    .dataWord0Length = (uint8_t)kSAI_WordWidth16bits,
+    .dataWordNLength = (uint8_t)kSAI_WordWidth16bits,
+    .dataWordLength = (uint8_t)kSAI_WordWidth16bits,
+    .dataOrder = kSAI_DataMSB,
+    .dataFirstBitShifted = 16U,
+    .dataWordNum = 2U,
+    .dataMaskedWord = 0x0U
+  },
+  .fifo = {
+    .fifoWatermark = 16U,
+    .fifoPacking = kSAI_FifoPackingDisabled,
+    .fifoContinueOneError = false
+  }
+};
+/* SAI1 Rx configuration */
+sai_transceiver_t SAI1_Rx_config = {
+  .masterSlave = kSAI_Master,
+  .bitClock = {
+    .bclkSrcSwap = false,
+    .bclkSource = kSAI_BclkSourceMclkOption1,
+    .bclkPolarity = kSAI_PolarityActiveLow,
+    .bclkInputDelay = false
+  },
+  .frameSync = {
+    .frameSyncWidth = 16U,
+    .frameSyncPolarity = kSAI_PolarityActiveLow,
+    .frameSyncEarly = true,
+  },
+  .syncMode = kSAI_ModeSync,
+  .channelMask = kSAI_Channel0Mask,
+  .startChannel = 0U,
+  .endChannel = 0U,
+  .channelNums = 1U,
+  .serialData = {
+    .dataMode = kSAI_DataPinStateTriState,
+    .dataWord0Length = (uint8_t)kSAI_WordWidth16bits,
+    .dataWordNLength = (uint8_t)kSAI_WordWidth16bits,
+    .dataWordLength = (uint8_t)kSAI_WordWidth16bits,
+    .dataOrder = kSAI_DataMSB,
+    .dataFirstBitShifted = 16U,
+    .dataWordNum = 2U,
+    .dataMaskedWord = 0x0U
+  },
+  .fifo = {
+    .fifoWatermark = 16U,
+    .fifoPacking = kSAI_FifoPackingDisabled,
+    .fifoContinueOneError = false
+  }
+};
+
+static void SAI1_init(void) {
+  /* Initialize SAI clock gate */
+  SAI_Init(SAI1_PERIPHERAL);
+  /* Configures SAI Tx sub-module functionality */
+  SAI_TxSetConfig(SAI1_PERIPHERAL, &SAI1_Tx_config);
+  /* Configures SAI Rx sub-module functionality */
+  SAI_RxSetConfig(SAI1_PERIPHERAL, &SAI1_Rx_config);
+  /* Set up SAI Tx bitclock rate by calculation of divider. */
+  SAI_TxSetBitClockRate(SAI1_PERIPHERAL, SAI1_TX_BCLK_SOURCE_CLOCK_HZ, SAI1_TX_SAMPLE_RATE, SAI1_TX_WORD_WIDTH, SAI1_TX_WORDS_PER_FRAME);
+  /* Set up SAI Rx bitclock rate by calculation of divider. */
+  SAI_RxSetBitClockRate(SAI1_PERIPHERAL, SAI1_RX_BCLK_SOURCE_CLOCK_HZ, SAI1_RX_SAMPLE_RATE, SAI1_RX_WORD_WIDTH, SAI1_RX_WORDS_PER_FRAME);
+  /* Enable interrupt SAI1_IRQn request in the NVIC. */
+  EnableIRQ(SAI1_IRQN);
+}
+
+/***********************************************************************************************************************
+ * FCB initialization code
+ **********************************************************************************************************************/
+/* clang-format off */
+/* TEXT BELOW IS USED AS SETTING FOR TOOLS *************************************
+instance:
+- name: 'FCB'
+- type: 'fcb'
+- mode: 'general'
+- custom_name_enabled: 'false'
+- type_id: 'fcb_a1f73568850e480e957b52e8952e8a4e'
+- functional_group: 'BOARD_InitPeripherals'
+- config_sets:
+  - fcb_general:
+    - fcb_config:
+      - readSampleClock: 'internalLoopBack'
+      - csHoldTime: '3'
+      - csSetupTime: '3'
+      - columnAddressWidth: '1'
+      - deviceModeCfgEnableBool: 'false'
+      - waitTimeCfgCommands: '0'
+      - deviceModeSeq: '0'
+      - deviceModeArg: '0'
+      - configCmdEnableBool: 'false'
+      - configModeType1: '0'
+      - configModeType2: '0'
+      - configModeType3: '0'
+      - configCmdSeqs1: '0'
+      - configCmdSeqs2: '0'
+      - configCmdSeqs3: '0'
+      - configCmdArgs1: '0'
+      - configCmdArgs2: '0'
+      - configCmdArgs3: '0'
+      - differentialClockEnableBool: 'false'
+      - wordAddressableEnableBool: 'false'
+      - safeConfigFreqEnableBool: 'false'
+      - ddrModeEnableBool: 'false'
+      - deviceTypes: 'serialNOR'
+      - padTypes: 'singlePad'
+      - bootModeEnum: 'normal'
+      - normalSDR: '24MHz'
+      - sflashA1Size: '0x800000'
+      - sflashA2Size: '0'
+      - sflashB1Size: '0'
+      - sflashB2Size: '0'
+      - csPadSettingOverride: '0'
+      - sclkPadSettingOverride: '0'
+      - dataPadSettingOverride: '0'
+      - dqsPadSettingOverride: '0'
+      - timeoutInMs: '0'
+      - commandInterval: '0'
+      - dataValidTime: '0'
+      - busyOffset: '0'
+      - busyBitPolarityBool: 'false'
+      - lookupTable:
+        - 0:
+          - instruct_array:
+            - 0:
+              - opcodeSDR: 'RADDR_SDR'
+              - num_pad: 'four_pad'
+              - operand: '0x18'
+            - 1:
+              - opcodeSDR: 'CMD_SDR'
+              - num_pad: 'one_pad'
+              - operand: '0xEB'
+            - 2:
+              - opcodeSDR: 'READ_SDR'
+              - num_pad: 'four_pad'
+              - operand: '0x04'
+            - 3:
+              - opcodeSDR: 'DUMMY_SDR'
+              - num_pad: 'four_pad'
+              - operand: '0x06'
+      - lutCustomSeqEnableBool: 'false'
+      - pageSize: '0x100'
+      - sectorSize: '0x1000'
+      - theSameFreq: 'true'
+      - isUniformBlockSizeBool: 'false'
+      - isDataOrderSwappedBool: 'false'
+      - serialNorTypeEnum: 'standardSPI'
+      - needExitNoCmdModeBool: 'false'
+      - halfClkForNonReadCmdBool: 'false'
+      - needRestoreNoCmdModeBool: 'false'
+      - blockSize: '0x40000'
+      - flashStateCtx: '0'
+    - quick_selection: 'default'
+ * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS **********/
+/* clang-format on */
+
+/* Empty initialization function (commented out)
+static void FCB_init(void) {
+} */
+
+/***********************************************************************************************************************
+ * LPI2C1 initialization code
+ **********************************************************************************************************************/
+/* clang-format off */
+/* TEXT BELOW IS USED AS SETTING FOR TOOLS *************************************
+instance:
+- name: 'LPI2C1'
+- type: 'lpi2c'
+- mode: 'master'
+- custom_name_enabled: 'false'
+- type_id: 'lpi2c_db68d4f4f06a22e25ab51fe9bd6db4d2'
+- functional_group: 'BOARD_InitPeripherals'
+- peripheral: 'LPI2C1'
+- config_sets:
+  - main:
+    - clockSource: 'Lpi2cClock'
+    - clockSourceFreq: 'BOARD_BootClockRUN'
+    - interrupt:
+      - IRQn: 'LPI2C1_IRQn'
+      - enable_interrrupt: 'enabled'
+      - enable_priority: 'false'
+      - priority: '0'
+      - enable_custom_name: 'false'
+    - quick_selection: 'qs_interrupt'
+  - master:
+    - mode: 'transfer'
+    - config:
+      - enableMaster: 'true'
+      - enableDoze: 'true'
+      - debugEnable: 'false'
+      - ignoreAck: 'false'
+      - pinConfig: 'kLPI2C_2PinOpenDrain'
+      - baudRate_Hz: '100000'
+      - busIdleTimeout_ns: '0'
+      - pinLowTimeout_ns: '0'
+      - sdaGlitchFilterWidth_ns: '0'
+      - sclGlitchFilterWidth_ns: '0'
+      - hostRequest:
+        - enable: 'false'
+        - source: 'kLPI2C_HostRequestExternalPin'
+        - polarity: 'kLPI2C_HostRequestPinActiveHigh'
+      - edmaRequestSources: ''
+    - transfer:
+      - blocking: 'false'
+      - enable_custom_handle: 'false'
+      - callback:
+        - name: ''
+        - userData: ''
+      - flags: ''
+      - slaveAddress: '0'
+      - direction: 'kLPI2C_Write'
+      - subaddress: '0'
+      - subaddressSize: '1'
+      - blocking_buffer: 'false'
+      - enable_custom_buffer: 'false'
+      - dataSize: '1'
+    - quick_selection: 'qs_master_transfer'
+ * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS **********/
+/* clang-format on */
+const lpi2c_master_config_t LPI2C1_masterConfig = {
+  .enableMaster = true,
+  .enableDoze = true,
+  .debugEnable = false,
+  .ignoreAck = false,
+  .pinConfig = kLPI2C_2PinOpenDrain,
+  .baudRate_Hz = 100000UL,
+  .busIdleTimeout_ns = 0UL,
+  .pinLowTimeout_ns = 0UL,
+  .sdaGlitchFilterWidth_ns = 0U,
+  .sclGlitchFilterWidth_ns = 0U,
+  .hostRequest = {
+    .enable = false,
+    .source = kLPI2C_HostRequestExternalPin,
+    .polarity = kLPI2C_HostRequestPinActiveHigh
+  }
+};
+lpi2c_master_transfer_t LPI2C1_masterTransfer = {
+  .flags = kLPI2C_TransferDefaultFlag,
+  .slaveAddress = 0,
+  .direction = kLPI2C_Write,
+  .subaddress = 0,
+  .subaddressSize = 1,
+  .data = LPI2C1_masterBuffer,
+  .dataSize = 1
+};
+lpi2c_master_handle_t LPI2C1_masterHandle;
+uint8_t LPI2C1_masterBuffer[LPI2C1_MASTER_BUFFER_SIZE];
+
+static void LPI2C1_init(void) {
+  LPI2C_MasterInit(LPI2C1_PERIPHERAL, &LPI2C1_masterConfig, LPI2C1_CLOCK_FREQ);
+  LPI2C_MasterTransferCreateHandle(LPI2C1_PERIPHERAL, &LPI2C1_masterHandle, NULL, NULL);
+}
+
+/***********************************************************************************************************************
+ * CAN1 initialization code
+ **********************************************************************************************************************/
+/* clang-format off */
+/* TEXT BELOW IS USED AS SETTING FOR TOOLS *************************************
+instance:
+- name: 'CAN1'
+- type: 'flexcan'
+- mode: 'interrupts'
+- custom_name_enabled: 'false'
+- type_id: 'flexcan_5e3926991a26d63f444aa30b3ad6630e'
+- functional_group: 'BOARD_InitPeripherals'
+- peripheral: 'CAN1'
+- config_sets:
+  - interruptsCfg:
+    - messageBufferIrqs: '0'
+    - messageBufferIrqs2: '0'
+    - interruptsEnable: ''
+    - enable_irq: 'false'
+    - interrupt_shared:
+      - IRQn: 'CAN1_IRQn'
+      - enable_interrrupt: 'enabled'
+      - enable_priority: 'false'
+      - priority: '0'
+      - enable_custom_name: 'false'
+  - fsl_flexcan:
+    - can_config:
+      - clockSource: 'kFLEXCAN_ClkSrcOsc'
+      - clockSourceFreq: 'BOARD_BootClockRUN'
+      - wakeupSrc: 'kFLEXCAN_WakeupSrcUnfiltered'
+      - baudRate: '1000000'
+      - maxMbNum: '16'
+      - enableLoopBack: 'false'
+      - enableTimerSync: 'true'
+      - enableSelfWakeup: 'false'
+      - enableIndividMask: 'false'
+      - disableSelfReception: 'false'
+      - enableListenOnlyMode: 'false'
+      - timingConfig:
+        - propSeg: '2'
+        - phaseSeg1: '4'
+        - phaseSeg2: '3'
+        - rJumpwidth: '2'
+        - bitTime: []
+    - enableRxFIFO: 'false'
+    - rxFIFO:
+      - idFilterTable: ''
+      - idFilterNum: 'num0'
+      - idFilterType: 'kFLEXCAN_RxFifoFilterTypeA'
+      - priority: 'kFLEXCAN_RxFifoPrioLow'
+    - channels:
+      - 0:
+        - mbID: '0'
+        - mbType: 'mbRx'
+        - rxMb:
+          - id: '0'
+          - format: 'kFLEXCAN_FrameFormatStandard'
+          - type: 'kFLEXCAN_FrameTypeData'
+      - 1:
+        - mbID: '1'
+        - mbType: 'mbTx'
+        - rxMb:
+          - id: '0'
+          - format: 'kFLEXCAN_FrameFormatStandard'
+          - type: 'kFLEXCAN_FrameTypeData'
+    - quick_selection: 'default'
+ * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS **********/
+/* clang-format on */
+const flexcan_config_t CAN1_config = {
+  .wakeupSrc = kFLEXCAN_WakeupSrcUnfiltered,
+  .baudRate = 1000000UL,
+  .maxMbNum = 16U,
+  .enableLoopBack = false,
+  .enableTimerSync = true,
+  .enableSelfWakeup = false,
+  .enableIndividMask = false,
+  .disableSelfReception = false,
+  .enableListenOnlyMode = false,
+  .timingConfig = {
+    .preDivider = 3,
+    .propSeg = 1,
+    .phaseSeg1 = 3,
+    .phaseSeg2 = 2,
+    .rJumpwidth = 1
+  }
+};
+/* Message buffer 0 configuration structure */
+const flexcan_rx_mb_config_t CAN1_rx_mb_config_0 = {
+  .id = 0UL,
+  .format = kFLEXCAN_FrameFormatStandard,
+  .type = kFLEXCAN_FrameTypeData
+};
+
+static void CAN1_init(void) {
+  FLEXCAN_Init(CAN1_PERIPHERAL, &CAN1_config, CAN1_CLOCK_SOURCE);
+
+  /* Message buffer 0 initialization */
+  FLEXCAN_SetRxMbConfig(CAN1_PERIPHERAL, 0, &CAN1_rx_mb_config_0, true);
+  /* Message buffer 1 initialization */
+  FLEXCAN_SetTxMbConfig(CAN1_PERIPHERAL, 1, true);
+}
+
+/***********************************************************************************************************************
  * Initialization functions
  **********************************************************************************************************************/
 void BOARD_InitPeripherals(void)
 {
   /* Initialize components */
+  LPUART1_init();
+  SAI1_init();
+  LPI2C1_init();
+  CAN1_init();
 }
 
 /***********************************************************************************************************************

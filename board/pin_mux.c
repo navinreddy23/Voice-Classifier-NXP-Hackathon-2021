@@ -161,6 +161,7 @@ power_domains: {NVCC_GPIO: '3.3'}
 
 #include "fsl_common.h"
 #include "fsl_iomuxc.h"
+#include "fsl_gpio.h"
 #include "pin_mux.h"
 
 /* FUNCTION ************************************************************************************************************
@@ -179,13 +180,14 @@ void BOARD_InitBootPins(void) {
 BOARD_InitPins:
 - options: {callFromInitBoot: 'true', coreID: core0, enableClock: 'true'}
 - pin_list:
-  - {pin_num: '75', peripheral: LPI2C1, signal: SCL, pin_signal: GPIO_AD_B1_14, software_input_on: Enable, open_drain: Enable, pull_up_down_config: Pull_Up_22K_Ohm}
-  - {pin_num: '74', peripheral: LPI2C1, signal: SDA, pin_signal: GPIO_AD_B1_15, software_input_on: Enable, open_drain: Enable, pull_up_down_config: Pull_Up_22K_Ohm}
+  - {pin_num: '106', peripheral: GPIO1, signal: 'gpio_io, 05', pin_signal: GPIO_AD_B0_05, direction: OUTPUT}
   - {pin_num: '92', peripheral: SAI1, signal: sai_mclk, pin_signal: GPIO_AD_B1_00, software_input_on: Enable}
   - {pin_num: '87', peripheral: SAI1, signal: sai_rx_data0, pin_signal: GPIO_AD_B1_05, software_input_on: Enable}
   - {pin_num: '91', peripheral: SAI1, signal: sai_tx_bclk, pin_signal: GPIO_AD_B1_01, software_input_on: Enable}
   - {pin_num: '89', peripheral: SAI1, signal: sai_tx_data0, pin_signal: GPIO_AD_B1_03, software_input_on: Enable}
-  - {pin_num: '90', peripheral: SAI1, signal: sai_tx_sync, pin_signal: GPIO_AD_B1_02, software_input_on: Enable}
+  - {pin_num: '90', peripheral: SAI1, signal: sai_tx_sync, pin_signal: GPIO_AD_B1_02, software_input_on: Enable, open_drain: Disable, pull_up_down_config: Pull_Up_100K_Ohm}
+  - {pin_num: '75', peripheral: LPI2C1, signal: SCL, pin_signal: GPIO_AD_B1_14, software_input_on: Enable, open_drain: Enable, pull_up_down_config: Pull_Up_22K_Ohm}
+  - {pin_num: '74', peripheral: LPI2C1, signal: SDA, pin_signal: GPIO_AD_B1_15, software_input_on: Enable, open_drain: Enable, pull_up_down_config: Pull_Up_22K_Ohm}
  * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS ***********
  */
 
@@ -198,6 +200,16 @@ BOARD_InitPins:
 void BOARD_InitPins(void) {
   CLOCK_EnableClock(kCLOCK_Iomuxc);           
 
+  /* GPIO configuration on GPIO_AD_B0_05 (pin 106) */
+  gpio_pin_config_t gpio1_pin106_config = {
+      .direction = kGPIO_DigitalOutput,
+      .outputLogic = 0U,
+      .interruptMode = kGPIO_NoIntmode
+  };
+  /* Initialize GPIO functionality on GPIO_AD_B0_05 (pin 106) */
+  GPIO_PinInit(GPIO1, 5U, &gpio1_pin106_config);
+
+  IOMUXC_SetPinMux(IOMUXC_GPIO_AD_B0_05_GPIO1_IO05, 0U); 
   IOMUXC_SetPinMux(IOMUXC_GPIO_AD_B1_00_SAI1_MCLK, 1U); 
   IOMUXC_SetPinMux(IOMUXC_GPIO_AD_B1_01_SAI1_TX_BCLK, 1U); 
   IOMUXC_SetPinMux(IOMUXC_GPIO_AD_B1_02_SAI1_TX_SYNC, 1U); 
@@ -205,6 +217,7 @@ void BOARD_InitPins(void) {
   IOMUXC_SetPinMux(IOMUXC_GPIO_AD_B1_05_SAI1_RX_DATA00, 1U); 
   IOMUXC_SetPinMux(IOMUXC_GPIO_AD_B1_14_LPI2C1_SCL, 1U); 
   IOMUXC_SetPinMux(IOMUXC_GPIO_AD_B1_15_LPI2C1_SDA, 1U); 
+  IOMUXC_SetPinConfig(IOMUXC_GPIO_AD_B1_02_SAI1_TX_SYNC, 0x90B0U); 
   IOMUXC_SetPinConfig(IOMUXC_GPIO_AD_B1_14_LPI2C1_SCL, 0xD8B0U); 
   IOMUXC_SetPinConfig(IOMUXC_GPIO_AD_B1_15_LPI2C1_SDA, 0xD8B0U); 
 }

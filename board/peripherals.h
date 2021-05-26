@@ -10,10 +10,74 @@
  * Included files
  **********************************************************************************************************************/
 #include "fsl_common.h"
+#include "fsl_lpuart.h"
+#include "fsl_clock.h"
+#include "fsl_sai.h"
+#include "fsl_lpi2c.h"
+#include "fsl_flexcan.h"
 
 #if defined(__cplusplus)
 extern "C" {
 #endif /* __cplusplus */
+
+/***********************************************************************************************************************
+ * Definitions
+ **********************************************************************************************************************/
+/* Definitions for BOARD_InitPeripherals functional group */
+/* Definition of peripheral ID */
+#define LPUART1_PERIPHERAL LPUART1
+/* Definition of the clock source frequency */
+#define LPUART1_CLOCK_SOURCE 80000000UL
+/* Definition of peripheral ID */
+#define SAI1_PERIPHERAL SAI1
+/* SAI1 interrupt vector ID (number). */
+#define SAI1_IRQN SAI1_IRQn
+/* SAI1 interrupt handler identifier. */
+#define SAI1_IRQHANDLER SAI1_IRQHandler
+/* Bit clock source frequency used for calculating the bit clock divider in the TxSetBitClockRate function. */
+#define SAI1_TX_BCLK_SOURCE_CLOCK_HZ 63529411UL
+/* Bit clock source frequency used for calculating the bit clock divider in the RxSetBitClockRate function. */
+#define SAI1_RX_BCLK_SOURCE_CLOCK_HZ 63529411UL
+/* Sample rate used for calculating the bit clock divider in the TxSetBitClockRate function. */
+#define SAI1_TX_SAMPLE_RATE 16000UL
+/* Sample rate used for calculating the bit clock divider in the RxSetBitClockRate function. */
+#define SAI1_RX_SAMPLE_RATE 16000UL
+/* Word width used for calculating the bit clock divider in the TxSetBitClockRate function. */
+#define SAI1_TX_WORD_WIDTH 16U
+/* Word width used for calculating the bit clock divider in the RxSetBitClockRate function. */
+#define SAI1_RX_WORD_WIDTH 16U
+/* Number of words within frame used for calculating the bit clock divider in the TxSetBitClockRate function. */
+#define SAI1_TX_WORDS_PER_FRAME 2U
+/* Number of words within frame used for calculating the bit clock divider in the RxSetBitClockRate function. */
+#define SAI1_RX_WORDS_PER_FRAME 2U
+/* BOARD_InitPeripherals defines for LPI2C1 */
+/* Definition of peripheral ID */
+#define LPI2C1_PERIPHERAL LPI2C1
+/* Definition of clock source */
+#define LPI2C1_CLOCK_FREQ 60000000UL
+/* Transfer buffer size */
+#define LPI2C1_MASTER_BUFFER_SIZE 1
+/* Definition of slave address */
+#define LPI2C1_MASTER_SLAVE_ADDRESS 0
+/* Definition of peripheral ID */
+#define CAN1_PERIPHERAL CAN1
+/* Definition of the clock source frequency */
+#define CAN1_CLOCK_SOURCE 40000000UL
+
+/***********************************************************************************************************************
+ * Global variables
+ **********************************************************************************************************************/
+extern const lpuart_config_t LPUART1_config;
+extern sai_transceiver_t SAI1_Tx_config;
+extern sai_transceiver_t SAI1_Rx_config;
+extern const lpi2c_master_config_t LPI2C1_masterConfig;
+extern lpi2c_master_transfer_t LPI2C1_masterTransfer;
+extern uint8_t LPI2C1_masterBuffer[LPI2C1_MASTER_BUFFER_SIZE];
+extern lpi2c_master_handle_t LPI2C1_masterHandle;
+extern const flexcan_config_t CAN1_config;
+/* Message buffer 0 configuration structure */
+extern const flexcan_rx_mb_config_t CAN1_rx_mb_config_0;
+extern flexcan_rx_fifo_config_t CAN1_rx_fifo_config;
 
 /***********************************************************************************************************************
  * Initialization functions

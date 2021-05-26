@@ -42,6 +42,7 @@
 #include "edge-impulse-sdk/classifier/ei_run_classifier.h"
 #include "audio.h"
 #include "timer.h"
+#include "board_init.h"
 /* TODO: insert other include files here. */
 
 /* TODO: insert other definitions and declarations here. */
@@ -70,16 +71,9 @@ void callback_on_rx(uint8* buffer)
  */
 int main(void) {
 
-    /* Init board hardware. */
-    BOARD_ConfigMPU();
-    BOARD_InitBootPins();
-    BOARD_InitBootClocks();
-    BOARD_InitBootPeripherals();
+	BOARD_Init();
 
-#ifndef BOARD_INIT_DEBUG_CONSOLE_PERIPHERAL
-    /* Init FSL debug console. */
-    BOARD_InitDebugConsole();
-#endif
+    PRINTF("\r\nBooted\r\n");
 
     USER_LED_INIT(1);
     TIMER_Init();

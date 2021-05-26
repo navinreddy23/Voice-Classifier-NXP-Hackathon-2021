@@ -29,7 +29,7 @@
 #define BOARD_UART_IRQ_HANDLER LPUART1_IRQHandler
 
 #ifndef BOARD_DEBUG_UART_BAUDRATE
-#define BOARD_DEBUG_UART_BAUDRATE (460800U)
+#define BOARD_DEBUG_UART_BAUDRATE (115200U)
 #endif /* BOARD_DEBUG_UART_BAUDRATE */
 
 /* @Brief Board accelerator sensor configuration */
