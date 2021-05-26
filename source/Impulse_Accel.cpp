@@ -97,12 +97,11 @@ int main(void) {
     		isReady = !isReady;
 
     		PRINTF("New sample\r\n");
-    		for(uint8_t i = 0; i < 3; i++)
+    		for(uint8_t i = 0; i < 1; i++)
     		{
         		signal_t signal;
         		signal.total_length = EI_CLASSIFIER_RAW_SAMPLE_COUNT;
         		signal.get_data = &microphone_audio_signal_get_data;
-        		//numpy::signal_from_buffer(&features[0], EI_CLASSIFIER_RAW_SAMPLE_COUNT, &signal);
         		ei_impulse_result_t result = { 0 };
 
         		EI_IMPULSE_ERROR r = run_classifier(&signal, &result, false);
@@ -118,10 +117,7 @@ int main(void) {
 
         		for (size_t ix = 0; ix < EI_CLASSIFIER_LABEL_COUNT; ix++)
         		{
-        			if(ix != 0 && result.classification[ix].value > 0.3)
-        			{
-        				PRINTF("    %s: %f\r\n", result.classification[ix].label, result.classification[ix].value);
-        			}
+					PRINTF("    %s: %f\r\n", result.classification[ix].label, result.classification[ix].value);
         		}
 
         		g_buf += ( (AUDIO_NUM*BUFFER_SIZE) / 4);
