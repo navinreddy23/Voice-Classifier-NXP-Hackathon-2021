@@ -81,6 +81,8 @@ int main(void) {
     BOARD_InitDebugConsole();
 #endif
 
+    PRINTF("\r\nDevice Booted - DMA\r\n");
+
     USER_LED_INIT(1);
     TIMER_Init();
 
