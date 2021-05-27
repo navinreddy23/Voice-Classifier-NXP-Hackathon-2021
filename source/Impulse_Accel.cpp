@@ -81,7 +81,7 @@ int main(void) {
     BOARD_InitDebugConsole();
 #endif
 
-    PRINTF("\r\nDevice Booted - DMA\r\n");
+    PRINTF("\r\nDevice Booted - DMA with FlexCAN Sources\r\n");
 
     USER_LED_INIT(1);
     TIMER_Init();
