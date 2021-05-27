@@ -9,6 +9,7 @@
 #include "stdbool.h"
 #include "timer.h"
 #include "fsl_qtmr.h"
+#include "mcop_mgr_inc.h"
 
 #if defined(__ICCARM__) || defined(__ARMCC_VERSION) || defined(__REDLIB__)
 #include <time.h>
@@ -51,7 +52,7 @@ volatile uint32_t msTicks;
 void QTMR_IRQ_HANDLER(void)
 {
 	msTicks++;
-	//MCOHW_Tick();
+	MCOHW_Tick();
     /* Clear interrupt flag.*/
     QTMR_ClearStatusFlags(BOARD_QTMR_BASEADDR, BOARD_SECOND_QTMR_CHANNEL, kQTMR_CompareFlag);
 

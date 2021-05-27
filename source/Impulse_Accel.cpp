@@ -42,6 +42,7 @@
 #include "edge-impulse-sdk/classifier/ei_run_classifier.h"
 #include "audio.h"
 #include "timer.h"
+#include "mcop_mgr_inc.h"
 /* TODO: insert other include files here. */
 
 /* TODO: insert other definitions and declarations here. */
@@ -83,13 +84,17 @@ int main(void) {
 
     PRINTF("\r\nDevice Booted - DMA with FlexCAN Sources\r\n");
 
-    USER_LED_INIT(1);
+    USER_LED_INIT(0);
     TIMER_Init();
+
+    MCOUSER_ResetCommunication();
 
     AUDIO_Init();
     AUDIO_SetCallBack(callback_on_rx);
 
     AUDIO_Receive();
+
+    USER_LED_ON();
 
     while(1)
     {
