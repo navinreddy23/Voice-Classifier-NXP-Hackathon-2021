@@ -66,6 +66,17 @@ void callback_on_rx(uint8* buffer)
     //AUDIO_Transfer(buffer);
 }
 
+static void CANOpen_ProcessApp(void)
+{
+	uint8_t label = TIMER_GetTimeInMs();
+	uint8_t accuracy = TIMER_GetTimeInMs();
+
+    MCO_WriteProcessData(P600001_VC_Command, 1, &(label));
+
+    MCO_WriteProcessData(P600002_VC_Accuracy, 1, &(accuracy));
+
+}
+
 /*
  * @brief   Application entry point.
  */
@@ -82,22 +93,49 @@ int main(void) {
     BOARD_InitDebugConsole();
 #endif
 
-    PRINTF("\r\nDevice Booted - DMA with FlexCAN Sources\r\n");
+    LIBCB_InitLeds();
+
+    PRINTF("\r\nDevice Booted - DMA with CANOpen Config\r\n");
 
     USER_LED_INIT(0);
+    AUDIO_Init();
     TIMER_Init();
 
     MCOUSER_ResetCommunication();
 
-    AUDIO_Init();
+
     AUDIO_SetCallBack(callback_on_rx);
 
     AUDIO_Receive();
 
     USER_LED_ON();
 
+	uint8_t do_nmtreset = TRUE; // reset all slave nodes once
+	uint16_t nmtreset_delay;    // delay before resetting slave nodes
+
+	// NMT reset delay
+	nmtreset_delay = MCOHW_GetTime() + 500;
+
+
     while(1)
     {
+		// Operate on CANopen protocol stack, slave
+		MCO_ProcessStack();
+		// Operate on application
+		CANOpen_ProcessApp();
+
+		if (MY_NMT_STATE == NMTSTATE_OP)
+		{
+			MGR_ProcessMgr();
+			USER_ProcessMgr();
+		}
+
+		if (do_nmtreset && MCOHW_IsTimeExpired(nmtreset_delay))
+		{
+			MGR_TransmitNMT(NMTMSG_RESETAPP, 0);
+			do_nmtreset = FALSE; // only do it once
+		}
+
     	if(isReady)
     	{
     		AUDIO_Receive();
