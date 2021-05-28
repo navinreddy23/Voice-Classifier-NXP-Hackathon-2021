@@ -64,8 +64,8 @@ extern "C" void vApplicationStackOverflowHook (TaskHandle_t xTask,
 /*
  * @brief   Application entry point.
  */
-int main(void) {
-
+int main(void)
+{
     /* Init board hardware. */
 	InitializeHardware();
 
