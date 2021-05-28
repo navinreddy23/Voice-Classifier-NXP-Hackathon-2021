@@ -42,21 +42,31 @@
 #include "FreeRTOS.h"
 #include "task.h"
 
+/*******************************************************************************
+ * Prototypes
+ ******************************************************************************/
 typedef struct
 {
 	uint8_t label;
 	uint8_t accuracy;
 }results_t;
 
-static int16_t *gBuf = NULL;
-static results_t finalResult;
-static TaskHandle_t hClassifier;
-
 extern "C" void vApplicationStackOverflowHook (TaskHandle_t xTask,
 											   signed char *pcTaskName);
 static void InitializeHardware(void);
 static int AudioToSignal(size_t offset, size_t length, float *pOutBuffer);
+/*******************************************************************************
+ * Variables
+ ******************************************************************************/
+static int16_t *gBuf = NULL;
+static results_t finalResult;
+static TaskHandle_t hClassifier;
 
+
+
+/*******************************************************************************
+ * Code
+ ******************************************************************************/
 static int AudioToSignal(size_t offset, size_t length, float *pOutBuffer)
 {
     numpy::int16_to_float(&gBuf[offset], pOutBuffer, length);
