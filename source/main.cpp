@@ -75,6 +75,8 @@ int main(void) {
 
 	AUDIO_Classifier_Init(NULL);
 
+	PRINTF("Core Clock freq: %u MHz\r\n", SystemCoreClock/1000/1000);
+
     PRINTF("\r\nStarting OS...\r\n");
 
     vTaskStartScheduler();
