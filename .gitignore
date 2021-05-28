@@ -19,7 +19,6 @@ Debug/
 
 # Libraries
 *.lib
-*.a
 *.la
 *.lo
 
@@ -51,3 +50,6 @@ modules.order
 Module.symvers
 Mkfile.old
 dkms.conf
+
+#Launch files
+*.launch
