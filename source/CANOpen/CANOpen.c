@@ -9,6 +9,7 @@
 #include "audio_classifier.h"
 #include "mcop_mgr_inc.h"
 
+#include "timer.h"
 #include "CANOpen.h"
 
 #include "FreeRTOS.h"
@@ -20,7 +21,7 @@
  ******************************************************************************/
 static void TaskCANOpenManager(void* arg);
 static void TaskCANOpenProcessPDO(void* arg);
-
+static void Tick(void);
 /*******************************************************************************
  * Variables
  ******************************************************************************/
@@ -34,6 +35,8 @@ void CANOpen_Init(void* arg)
 {
 	 xTaskCreate(TaskCANOpenManager, "CANOpen Manager", 512, NULL, 2, NULL);
 	 xTaskCreate(TaskCANOpenProcessPDO, "CANOpen PDO Processor", 512, NULL, 0, NULL);
+
+	 TIMER_SetCallBack(Tick);
 }
 
 static void TaskCANOpenProcessPDO(void* arg)
@@ -70,7 +73,8 @@ static void TaskCANOpenManager(void* arg)
 	{
 		// Operate on CANopen protocol stack, slave
 		MCO_ProcessStack();
-		// Operate on application
+
+		// Application is processed in TaskCANOpenProcessPDO()
 
 		if (MY_NMT_STATE == NMTSTATE_OP)
 		{
@@ -86,4 +90,9 @@ static void TaskCANOpenManager(void* arg)
 
 		vTaskDelay(10);
 	}
+}
+
+static void Tick(void)
+{
+	MCOHW_Tick();
 }

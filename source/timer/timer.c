@@ -9,7 +9,7 @@
 #include "stdbool.h"
 #include "timer.h"
 #include "fsl_qtmr.h"
-#include "mcop_mgr_inc.h"
+//#include "mcop_mgr_inc.h"
 
 #if defined(__ICCARM__) || defined(__ARMCC_VERSION) || defined(__REDLIB__)
 #include <time.h>
@@ -43,8 +43,8 @@
 /*******************************************************************************
  * Variables
  ******************************************************************************/
-
 volatile uint32_t msTicks;
+static cb_timer_handle_t cbTimerTick;
 
 /*******************************************************************************
  * Code
@@ -52,7 +52,12 @@ volatile uint32_t msTicks;
 void QTMR_IRQ_HANDLER(void)
 {
 	msTicks++;
-	MCOHW_Tick();
+
+	if(cbTimerTick != NULL)
+	{
+		cbTimerTick();
+	}
+
     /* Clear interrupt flag.*/
     QTMR_ClearStatusFlags(BOARD_QTMR_BASEADDR, BOARD_SECOND_QTMR_CHANNEL, kQTMR_CompareFlag);
 
@@ -84,6 +89,11 @@ void TIMER_Init()
 uint32_t TIMER_GetTimeInMs()
 {
     return msTicks;
+}
+
+void TIMER_SetCallBack(cb_timer_handle_t funcPtr)
+{
+	cbTimerTick = funcPtr;
 }
 
 #if defined(__ARMCC_VERSION) || defined(__REDLIB__)

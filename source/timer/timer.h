@@ -15,12 +15,11 @@ extern "C" {
 /*******************************************************************************
  * Prototypes
  ******************************************************************************/
- 
+typedef void(*cb_timer_handle_t)(void);
+
 void TIMER_Init();
-
 uint32_t TIMER_GetTimeInMs(void);
-
-void TIMER_tick(void* arg);
+void TIMER_SetCallBack(cb_timer_handle_t funcPtr);
 
 #if defined(__cplusplus)
 }
