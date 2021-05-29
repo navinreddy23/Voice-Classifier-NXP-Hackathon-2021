@@ -5,9 +5,9 @@
  *      Author: navin
  */
 
+#include "audio_dma.h"
 #include "fsl_debug_console.h"
 
-#include "audio.h"
 #include "audio_classifier.h"
 #include "edge-impulse-sdk/classifier/ei_run_classifier.h"
 
@@ -52,8 +52,8 @@ static void TaskAudioClassifier(void* arg)
 
 	float keyword_accuracy[EI_CLASSIFIER_LABEL_COUNT] = {0};
 
-    AUDIO_SetCallBack(&CallbackOnRx);
-    AUDIO_Receive();
+    AUDIO_DMA_SetCallBack(&CallbackOnRx);
+    AUDIO_DMA_Receive();
 
 	signal.total_length = EI_CLASSIFIER_RAW_SAMPLE_COUNT;
 	signal.get_data = &AudioToSignal;
@@ -62,7 +62,7 @@ static void TaskAudioClassifier(void* arg)
 	{
 		xTaskNotifyWait(0,0,&notification,portMAX_DELAY);
 
-		AUDIO_Receive();
+		AUDIO_DMA_Receive();
 
 		ei_error = run_classifier(&signal, &result, false);
 		if (ei_error != EI_IMPULSE_OK)
@@ -117,7 +117,7 @@ static void CallbackOnRx(uint8* buffer)
 	pBuf = (int16_t*)buffer;
 
 	xTaskNotifyFromISR(hClassifier, 0, eNoAction, &pxHigherPriorityTaskWoken);
-    //AUDIO_Transfer(buffer);
+    //AUDIO_DMA_Transfer(buffer);
 }
 
 static void PrintResults(ei_impulse_result_t* pRes, uint8_t topMatch)

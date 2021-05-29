@@ -4,6 +4,7 @@
  *  Created on: May 23, 2021
  *      Author: navin
  */
+#include "audio_dma.h"
 #include "board.h"
 
 #include "fsl_codec_common.h"
@@ -13,7 +14,6 @@
 #include "fsl_sai.h"
 #include "fsl_sai_edma.h"
 #include "fsl_dmamux.h"
-#include "audio.h"
 
 /*******************************************************************************
  * Definitions
@@ -161,7 +161,7 @@ static void TxCallbackFromISR(I2S_Type *base, sai_edma_handle_t *handle, status_
 	;
 }
 
-void AUDIO_Init(void)
+void AUDIO_DMA_Init(void)
 {
     CLOCK_InitAudioPll(&audioPllConfig);
 
@@ -224,7 +224,7 @@ void AUDIO_Init(void)
     }
 }
 
-void AUDIO_Receive(void)
+void AUDIO_DMA_Receive(void)
 {
     xfer.data     = Buffer + (bufIndex * BUFFER_SIZE * AUDIO_NUM);
     xfer.dataSize = BUFFER_SIZE * AUDIO_NUM;
@@ -234,14 +234,14 @@ void AUDIO_Receive(void)
     }
 }
 
-void AUDIO_Transfer(uint8_t* buffer)
+void AUDIO_DMA_Transfer(uint8_t* buffer)
 {
     xfer.data     = buffer;
     xfer.dataSize = BUFFER_SIZE * AUDIO_NUM;
     SAI_TransferSendEDMA(AUDIO_SAI_INSTANCE, &txHandle, &xfer);
 }
 
-void AUDIO_SetCallBack(cb_rx_handle_t cbFuncPtr)
+void AUDIO_DMA_SetCallBack(cb_rx_handle_t cbFuncPtr)
 {
 	cbFuncOnRxCplt = (cb_rx_handle_t)cbFuncPtr;
 }

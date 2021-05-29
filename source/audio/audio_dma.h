@@ -34,8 +34,8 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef AUDIO_AUDIO_H_
-#define AUDIO_AUDIO_H_
+#ifndef AUDIO_AUDIO_DMA_H_
+#define AUDIO_AUDIO_DMA_H_
 
 #include <stdint.h>
 
@@ -48,14 +48,14 @@ extern "C" {
  ******************************************************************************/
 typedef void(*cb_rx_handle_t)(uint8_t*);
 
-void AUDIO_Init(void);
-void AUDIO_Receive(void);
-void AUDIO_Transfer(uint8_t* buffer);
-void AUDIO_SetCallBack(cb_rx_handle_t);
+void AUDIO_DMA_Init(void);
+void AUDIO_DMA_Receive(void);
+void AUDIO_DMA_Transfer(uint8_t* buffer);
+void AUDIO_DMA_SetCallBack(cb_rx_handle_t);
 
 #if defined(__cplusplus)
 }
 #endif /* __cplusplus */
 
 
-#endif /* AUDIO_AUDIO_H_ */
+#endif /* AUDIO_AUDIO_DMA_H_ */

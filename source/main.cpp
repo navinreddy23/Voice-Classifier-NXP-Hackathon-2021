@@ -32,11 +32,11 @@
  * @file    main.cpp
  * @brief   Application entry point.
  */
+#include "audio_dma.h"
 #include "board.h"
 #include "peripherals.h"
 #include "fsl_debug_console.h"
 
-#include "audio.h"
 #include "audio_classifier.h"
 
 #include "timer.h"
@@ -96,7 +96,7 @@ static void InitializeHardware(void)
     BOARD_InitDebugConsole();
 
     LIBCB_InitLeds();
-    AUDIO_Init();
+    AUDIO_DMA_Init();
     TIMER_Init();
 }
 
