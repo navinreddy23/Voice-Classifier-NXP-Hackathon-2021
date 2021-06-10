@@ -23,6 +23,7 @@ static void TaskAudioClassifier(void* arg);
 static uint8_t FilteResults(float*, size_t, results_classifier_t*);
 static void CallbackOnRx(uint8* buffer);
 static void PrintResults(ei_impulse_result_t* pRes, uint8_t topMatch);
+
 /*******************************************************************************
  * Variables
  ******************************************************************************/
@@ -32,7 +33,7 @@ QueueHandle_t qResults;
 
 /*******************************************************************************
  * Code
-*******************************************************************************/
+ *******************************************************************************/
 
 void AUDIO_Classifier_Init(void* arg)
 {
@@ -52,8 +53,8 @@ static void TaskAudioClassifier(void* arg)
 
 	float keyword_accuracy[EI_CLASSIFIER_LABEL_COUNT] = {0};
 
-    AUDIO_DMA_SetCallBack(&CallbackOnRx);
-    AUDIO_DMA_Receive();
+	AUDIO_DMA_SetCallBack(&CallbackOnRx);
+	AUDIO_DMA_Receive();
 
 	signal.total_length = EI_CLASSIFIER_RAW_SAMPLE_COUNT;
 	signal.get_data = &AudioToSignal;
@@ -106,9 +107,9 @@ static uint8_t FilteResults(float* pKeyAccuracies, size_t size, results_classifi
 
 static int AudioToSignal(size_t offset, size_t length, float *pOutBuffer)
 {
-    numpy::int16_to_float(&pBuf[offset], pOutBuffer, length);
+	numpy::int16_to_float(&pBuf[offset], pOutBuffer, length);
 
-    return 0;
+	return 0;
 }
 
 static void CallbackOnRx(uint8* buffer)
@@ -117,7 +118,7 @@ static void CallbackOnRx(uint8* buffer)
 	pBuf = (int16_t*)buffer;
 
 	xTaskNotifyFromISR(hClassifier, 0, eNoAction, &pxHigherPriorityTaskWoken);
-    //AUDIO_DMA_Transfer(buffer);
+	//AUDIO_DMA_Transfer(buffer);
 }
 
 static void PrintResults(ei_impulse_result_t* pRes, uint8_t topMatch)
@@ -125,7 +126,7 @@ static void PrintResults(ei_impulse_result_t* pRes, uint8_t topMatch)
 
 	PRINTF("Predictions ");
 	PRINTF("(DSP: %d ms., Classification: %d ms., Anomaly: %d ms.)-> ",
-			pRes->timing.dsp, pRes->timing.classification, pRes->timing.anomaly);
+					pRes->timing.dsp, pRes->timing.classification, pRes->timing.anomaly);
 
 	PRINTF("%s: %f\r\n", pRes->classification[topMatch].label, pRes->classification[topMatch].value);
 }

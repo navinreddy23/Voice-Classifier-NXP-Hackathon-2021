@@ -32,26 +32,25 @@
  * @file    main.cpp
  * @brief   Application entry point.
  */
-#include "audio_dma.h"
 #include "board.h"
 #include "peripherals.h"
 #include "fsl_debug_console.h"
 
+#include "audio_dma.h"
 #include "audio_classifier.h"
-
 #include "timer.h"
+#include "CANOpen.h"
 
 #include "mcop_mgr_inc.h"
-#include "CANOpen.h"
+#include "FreeRTOS.h"
 #include "task.h"
-
 
 /*******************************************************************************
  * Prototypes
  ******************************************************************************/
 static void InitializeHardware(void);
 extern "C" void vApplicationStackOverflowHook (TaskHandle_t xTask,
-											   signed char *pcTaskName);
+				signed char *pcTaskName);
 
 /*******************************************************************************
  * Variables
@@ -66,46 +65,45 @@ extern "C" void vApplicationStackOverflowHook (TaskHandle_t xTask,
  */
 int main(void)
 {
-    /* Init board hardware. */
+	/* Init board hardware. */
 	InitializeHardware();
 
-    PRINTF("\r\nInitialized hardware - AUDIO-DMA, CAN, TIMER, and UART\r\n");
+	PRINTF("\r\nInitialized hardware - AUDIO-DMA, CAN, TIMER, and UART\r\n");
 
-    CANOpen_Init(NULL);
+	CANOpen_Init(NULL);
 
 	AUDIO_Classifier_Init(NULL);
 
 	PRINTF("Core Clock freq: %u MHz\r\n", SystemCoreClock/1000/1000);
 
-    PRINTF("\r\nStarting OS...\r\n");
+	PRINTF("\r\nStarting OS...\r\n");
 
-    vTaskStartScheduler();
+	vTaskStartScheduler();
 
-    while(1);
+	while(1);
 
-    return 0 ;
+	return 0 ;
 }
 
 static void InitializeHardware(void)
 {
+	BOARD_ConfigMPU();
+	BOARD_InitBootPins();
+	BOARD_InitBootClocks();
+	BOARD_InitBootPeripherals();
+	BOARD_InitDebugConsole();
 
-    BOARD_ConfigMPU();
-    BOARD_InitBootPins();
-    BOARD_InitBootClocks();
-    BOARD_InitBootPeripherals();
-    BOARD_InitDebugConsole();
-
-    LIBCB_InitLeds();
-    AUDIO_DMA_Init();
-    TIMER_Init();
+	LIBCB_InitLeds();
+	AUDIO_DMA_Init();
+	TIMER_Init();
 }
 
 extern "C"
 {
-	void vApplicationStackOverflowHook (TaskHandle_t xTask, signed char *pcTaskName)
-	{
-		(void)xTask;
-		(void)pcTaskName;
-		while(1);
-	}
+void vApplicationStackOverflowHook (TaskHandle_t xTask, signed char *pcTaskName)
+{
+	(void)xTask;
+	(void)pcTaskName;
+	while(1);
+}
 }

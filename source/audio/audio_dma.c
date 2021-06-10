@@ -54,8 +54,8 @@
 #define AUDIO_SAI1_CLOCK_SOURCE_DIVIDER (63U)
 /* Get frequency of sai1 clock */
 #define AUDIO_SAI_CLK_FREQ                                                        \
-    (CLOCK_GetFreq(kCLOCK_AudioPllClk) / (AUDIO_SAI1_CLOCK_SOURCE_DIVIDER + 1U) / \
-     (AUDIO_SAI1_CLOCK_SOURCE_PRE_DIVIDER + 1U))
+		(CLOCK_GetFreq(kCLOCK_AudioPllClk) / (AUDIO_SAI1_CLOCK_SOURCE_DIVIDER + 1U) / \
+				(AUDIO_SAI1_CLOCK_SOURCE_PRE_DIVIDER + 1U))
 
 /* I2C instance and clock */
 #define AUDIO_I2C_INSTANCE LPI2C1
@@ -79,30 +79,34 @@
  * Prototypes
  ******************************************************************************/
 static void BOARD_EnableSaiMclkOutput(bool enable);
+static void RxCallbackFromISR(I2S_Type *base, sai_edma_handle_t *handle,
+		status_t status, void *userData);
+static void TxCallbackFromISR(I2S_Type *base, sai_edma_handle_t *handle,
+		status_t status, void *userData);
 
 /*******************************************************************************
  * Variables
  ******************************************************************************/
 wm8960_config_t wm8960Config =
 {
-    .i2cConfig = {.codecI2CInstance = BOARD_CODEC_I2C_INSTANCE, .codecI2CSourceClock = BOARD_CODEC_I2C_CLOCK_FREQ},
-    .route     = kWM8960_RoutePlaybackandRecord,
-    .rightInputSource = kWM8960_InputDifferentialMicInput2,
-    .playSource       = kWM8960_PlaySourceDAC,
-    .slaveAddress     = WM8960_I2C_ADDR,
-    .bus              = kWM8960_BusI2S,
-    .format = {.mclk_HZ = 6144000U, .sampleRate = kWM8960_AudioSampleRate16KHz, .bitWidth = kWM8960_AudioBitWidth16bit},
-    .master_slave = false,
+		.i2cConfig = {.codecI2CInstance = BOARD_CODEC_I2C_INSTANCE, .codecI2CSourceClock = BOARD_CODEC_I2C_CLOCK_FREQ},
+		.route     = kWM8960_RoutePlaybackandRecord,
+		.rightInputSource = kWM8960_InputDifferentialMicInput2,
+		.playSource       = kWM8960_PlaySourceDAC,
+		.slaveAddress     = WM8960_I2C_ADDR,
+		.bus              = kWM8960_BusI2S,
+		.format = {.mclk_HZ = 6144000U, .sampleRate = kWM8960_AudioSampleRate16KHz, .bitWidth = kWM8960_AudioBitWidth16bit},
+		.master_slave = false,
 };
 
 codec_config_t boardCodecConfig = {.codecDevType = kCODEC_WM8960, .codecDevConfig = &wm8960Config};
 
 const clock_audio_pll_config_t audioPllConfig =
 {
-    .loopDivider = 32,  /* PLL loop divider. Valid range for DIV_SELECT divider value: 27~54. */
-    .postDivider = 1,   /* Divider after the PLL, should only be 1, 2, 4, 8, 16. */
-    .numerator   = 77,  /* 30 bit numerator of fractional loop divider. */
-    .denominator = 100, /* 30 bit denominator of fractional loop divider */
+		.loopDivider = 32,  /* PLL loop divider. Valid range for DIV_SELECT divider value: 27~54. */
+		.postDivider = 1,   /* Divider after the PLL, should only be 1, 2, 4, 8, 16. */
+		.numerator   = 77,  /* 30 bit numerator of fractional loop divider. */
+		.denominator = 100, /* 30 bit denominator of fractional loop divider */
 };
 
 AT_NONCACHEABLE_SECTION_ALIGN(static uint8_t Buffer[AUDIO_NUM * BUFFER_NUMBER * BUFFER_SIZE], 4);
@@ -128,32 +132,32 @@ static uint8_t bufIndex = 0;
 
 static void BOARD_EnableSaiMclkOutput(bool enable)
 {
-    if (enable)
-    {
-        IOMUXC_GPR->GPR1 |= IOMUXC_GPR_GPR1_SAI1_MCLK_DIR_MASK;
-    }
-    else
-    {
-        IOMUXC_GPR->GPR1 &= (~IOMUXC_GPR_GPR1_SAI1_MCLK_DIR_MASK);
-    }
+	if (enable)
+	{
+		IOMUXC_GPR->GPR1 |= IOMUXC_GPR_GPR1_SAI1_MCLK_DIR_MASK;
+	}
+	else
+	{
+		IOMUXC_GPR->GPR1 &= (~IOMUXC_GPR_GPR1_SAI1_MCLK_DIR_MASK);
+	}
 }
 
 static void RxCallbackFromISR(I2S_Type *base, sai_edma_handle_t *handle, status_t status, void *userData)
 {
-    if (kStatus_SAI_RxError == status)
-    {
-        /* Handle the error. */
-    }
+	if (kStatus_SAI_RxError == status)
+	{
+		/* Handle the error. */
+	}
 
-    if(cbFuncOnRxCplt != NULL)
-    {
-    	cbFuncOnRxCplt(Buffer + (bufIndex * AUDIO_NUM * BUFFER_SIZE));
-    }
+	if(cbFuncOnRxCplt != NULL)
+	{
+		cbFuncOnRxCplt(Buffer + (bufIndex * AUDIO_NUM * BUFFER_SIZE));
+	}
 
-    if(++bufIndex == BUFFER_NUMBER)
-    {
-    	bufIndex = 0;
-    }
+	if(++bufIndex == BUFFER_NUMBER)
+	{
+		bufIndex = 0;
+	}
 }
 
 static void TxCallbackFromISR(I2S_Type *base, sai_edma_handle_t *handle, status_t status, void *userData)
@@ -163,82 +167,82 @@ static void TxCallbackFromISR(I2S_Type *base, sai_edma_handle_t *handle, status_
 
 void AUDIO_DMA_Init(void)
 {
-    CLOCK_InitAudioPll(&audioPllConfig);
+	CLOCK_InitAudioPll(&audioPllConfig);
 
-    /*Clock setting for LPI2C*/
-    CLOCK_SetMux(kCLOCK_Lpi2cMux, AUDIO_LPI2C_CLOCK_SOURCE_SELECT);
-    CLOCK_SetDiv(kCLOCK_Lpi2cDiv, AUDIO_LPI2C_CLOCK_SOURCE_DIVIDER);
+	/*Clock setting for LPI2C*/
+	CLOCK_SetMux(kCLOCK_Lpi2cMux, AUDIO_LPI2C_CLOCK_SOURCE_SELECT);
+	CLOCK_SetDiv(kCLOCK_Lpi2cDiv, AUDIO_LPI2C_CLOCK_SOURCE_DIVIDER);
 
-    /*Clock setting for SAI1*/
-    CLOCK_SetMux(kCLOCK_Sai1Mux, AUDIO_SAI1_CLOCK_SOURCE_SELECT);
-    CLOCK_SetDiv(kCLOCK_Sai1PreDiv, AUDIO_SAI1_CLOCK_SOURCE_PRE_DIVIDER);
-    CLOCK_SetDiv(kCLOCK_Sai1Div, AUDIO_SAI1_CLOCK_SOURCE_DIVIDER);
+	/*Clock setting for SAI1*/
+	CLOCK_SetMux(kCLOCK_Sai1Mux, AUDIO_SAI1_CLOCK_SOURCE_SELECT);
+	CLOCK_SetDiv(kCLOCK_Sai1PreDiv, AUDIO_SAI1_CLOCK_SOURCE_PRE_DIVIDER);
+	CLOCK_SetDiv(kCLOCK_Sai1Div, AUDIO_SAI1_CLOCK_SOURCE_DIVIDER);
 
-    /*Enable MCLK clock*/
-    BOARD_EnableSaiMclkOutput(true);
+	/*Enable MCLK clock*/
+	BOARD_EnableSaiMclkOutput(true);
 
-    /* Init DMAMUX */
-    DMAMUX_Init(AUDIO_DMAMUX);
-    DMAMUX_SetSource(AUDIO_DMAMUX, AUDIO_TX_EDMA_CHANNEL, (uint8_t)AUDIO_SAI_TX_SOURCE);
-    DMAMUX_EnableChannel(AUDIO_DMAMUX, AUDIO_TX_EDMA_CHANNEL);
-    DMAMUX_SetSource(AUDIO_DMAMUX, AUDIO_RX_EDMA_CHANNEL, (uint8_t)AUDIO_SAI_RX_SOURCE);
-    DMAMUX_EnableChannel(AUDIO_DMAMUX, AUDIO_RX_EDMA_CHANNEL);
+	/* Init DMAMUX */
+	DMAMUX_Init(AUDIO_DMAMUX);
+	DMAMUX_SetSource(AUDIO_DMAMUX, AUDIO_TX_EDMA_CHANNEL, (uint8_t)AUDIO_SAI_TX_SOURCE);
+	DMAMUX_EnableChannel(AUDIO_DMAMUX, AUDIO_TX_EDMA_CHANNEL);
+	DMAMUX_SetSource(AUDIO_DMAMUX, AUDIO_RX_EDMA_CHANNEL, (uint8_t)AUDIO_SAI_RX_SOURCE);
+	DMAMUX_EnableChannel(AUDIO_DMAMUX, AUDIO_RX_EDMA_CHANNEL);
 
-    /* Init DMA and create handle for DMA */
-    EDMA_GetDefaultConfig(&dmaConfig);
-    EDMA_Init(AUDIO_DMA, &dmaConfig);
-    EDMA_CreateHandle(&dmaTxHandle, AUDIO_DMA, AUDIO_TX_EDMA_CHANNEL);
-    EDMA_CreateHandle(&dmaRxHandle, AUDIO_DMA, AUDIO_RX_EDMA_CHANNEL);
+	/* Init DMA and create handle for DMA */
+	EDMA_GetDefaultConfig(&dmaConfig);
+	EDMA_Init(AUDIO_DMA, &dmaConfig);
+	EDMA_CreateHandle(&dmaTxHandle, AUDIO_DMA, AUDIO_TX_EDMA_CHANNEL);
+	EDMA_CreateHandle(&dmaRxHandle, AUDIO_DMA, AUDIO_RX_EDMA_CHANNEL);
 #if defined(FSL_FEATURE_EDMA_HAS_CHANNEL_MUX) && FSL_FEATURE_EDMA_HAS_CHANNEL_MUX
-    EDMA_SetChannelMux(AUDIO_DMA, AUDIO_TX_EDMA_CHANNEL, DEMO_SAI_TX_EDMA_CHANNEL);
-    EDMA_SetChannelMux(AUDIO_DMA, AUDIO_RX_EDMA_CHANNEL, DEMO_SAI_RX_EDMA_CHANNEL);
+	EDMA_SetChannelMux(AUDIO_DMA, AUDIO_TX_EDMA_CHANNEL, DEMO_SAI_TX_EDMA_CHANNEL);
+	EDMA_SetChannelMux(AUDIO_DMA, AUDIO_RX_EDMA_CHANNEL, DEMO_SAI_RX_EDMA_CHANNEL);
 #endif
 
-    /* SAI init */
-    SAI_Init(AUDIO_SAI_INSTANCE);
+	/* SAI init */
+	SAI_Init(AUDIO_SAI_INSTANCE);
 
-    SAI_TransferTxCreateHandleEDMA(AUDIO_SAI_INSTANCE, &txHandle, TxCallbackFromISR, NULL, &dmaTxHandle);
-    SAI_TransferRxCreateHandleEDMA(AUDIO_SAI_INSTANCE, &rxHandle, RxCallbackFromISR, NULL, &dmaRxHandle);
+	SAI_TransferTxCreateHandleEDMA(AUDIO_SAI_INSTANCE, &txHandle, TxCallbackFromISR, NULL, &dmaTxHandle);
+	SAI_TransferRxCreateHandleEDMA(AUDIO_SAI_INSTANCE, &rxHandle, RxCallbackFromISR, NULL, &dmaRxHandle);
 
-    /* I2S mode configurations */
-    SAI_GetClassicI2SConfig(&saiConfig, AUDIO_BIT_WIDTH, kSAI_Stereo, 1U << AUDIO_SAI_CHANNEL);
-    saiConfig.syncMode    = AUDIO_SAI_TX_SYNC_MODE;
-    saiConfig.masterSlave = AUDIO_SAI_MASTER_SLAVE;
-    SAI_TransferTxSetConfigEDMA(AUDIO_SAI_INSTANCE, &txHandle, &saiConfig);
-    saiConfig.syncMode = AUDIO_SAI_RX_SYNC_MODE;
-    SAI_TransferRxSetConfigEDMA(AUDIO_SAI_INSTANCE, &rxHandle, &saiConfig);
+	/* I2S mode configurations */
+	SAI_GetClassicI2SConfig(&saiConfig, AUDIO_BIT_WIDTH, kSAI_Stereo, 1U << AUDIO_SAI_CHANNEL);
+	saiConfig.syncMode    = AUDIO_SAI_TX_SYNC_MODE;
+	saiConfig.masterSlave = AUDIO_SAI_MASTER_SLAVE;
+	SAI_TransferTxSetConfigEDMA(AUDIO_SAI_INSTANCE, &txHandle, &saiConfig);
+	saiConfig.syncMode = AUDIO_SAI_RX_SYNC_MODE;
+	SAI_TransferRxSetConfigEDMA(AUDIO_SAI_INSTANCE, &rxHandle, &saiConfig);
 
-    /* set bit clock divider */
-    SAI_TxSetBitClockRate(AUDIO_SAI_INSTANCE, AUDIO_MASTER_CLOCK, AUDIO_SAMPLE_RATE, AUDIO_BIT_WIDTH,
-                          AUDIO_DATA_CHANNEL);
-    SAI_RxSetBitClockRate(AUDIO_SAI_INSTANCE, AUDIO_MASTER_CLOCK, AUDIO_SAMPLE_RATE, AUDIO_BIT_WIDTH,
-                          AUDIO_DATA_CHANNEL);
+	/* set bit clock divider */
+	SAI_TxSetBitClockRate(AUDIO_SAI_INSTANCE, AUDIO_MASTER_CLOCK, AUDIO_SAMPLE_RATE, AUDIO_BIT_WIDTH,
+			AUDIO_DATA_CHANNEL);
+	SAI_RxSetBitClockRate(AUDIO_SAI_INSTANCE, AUDIO_MASTER_CLOCK, AUDIO_SAMPLE_RATE, AUDIO_BIT_WIDTH,
+			AUDIO_DATA_CHANNEL);
 
-    /* master clock configurations */
-    BOARD_MASTER_CLOCK_CONFIG();
+	/* master clock configurations */
+	BOARD_MASTER_CLOCK_CONFIG();
 
-    /* Use default setting to init codec */
-    if (CODEC_Init(&codecHandle, &boardCodecConfig) != kStatus_Success)
-    {
-        assert(false);
-    }
+	/* Use default setting to init codec */
+	if (CODEC_Init(&codecHandle, &boardCodecConfig) != kStatus_Success)
+	{
+		assert(false);
+	}
 }
 
 void AUDIO_DMA_Receive(void)
 {
-    xfer.data     = Buffer + (bufIndex * BUFFER_SIZE * AUDIO_NUM);
-    xfer.dataSize = BUFFER_SIZE * AUDIO_NUM;
-    if (kStatus_Success == SAI_TransferReceiveEDMA(AUDIO_SAI_INSTANCE, &rxHandle, &xfer))
-    {
-    	//Handle error, if necessary.
-    }
+	xfer.data     = Buffer + (bufIndex * BUFFER_SIZE * AUDIO_NUM);
+	xfer.dataSize = BUFFER_SIZE * AUDIO_NUM;
+	if (kStatus_Success == SAI_TransferReceiveEDMA(AUDIO_SAI_INSTANCE, &rxHandle, &xfer))
+	{
+		//Handle error, if necessary.
+	}
 }
 
 void AUDIO_DMA_Transfer(uint8_t* buffer)
 {
-    xfer.data     = buffer;
-    xfer.dataSize = BUFFER_SIZE * AUDIO_NUM;
-    SAI_TransferSendEDMA(AUDIO_SAI_INSTANCE, &txHandle, &xfer);
+	xfer.data     = buffer;
+	xfer.dataSize = BUFFER_SIZE * AUDIO_NUM;
+	SAI_TransferSendEDMA(AUDIO_SAI_INSTANCE, &txHandle, &xfer);
 }
 
 void AUDIO_DMA_SetCallBack(cb_rx_handle_t cbFuncPtr)

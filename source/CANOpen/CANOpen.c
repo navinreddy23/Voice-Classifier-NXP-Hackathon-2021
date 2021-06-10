@@ -33,10 +33,10 @@ extern QueueHandle_t qResults; //Defined in audio_classifier.cpp
 
 void CANOpen_Init(void* arg)
 {
-	 xTaskCreate(TaskCANOpenManager, "CANOpen Manager", 512, NULL, 2, NULL);
-	 xTaskCreate(TaskCANOpenProcessPDO, "CANOpen PDO Processor", 512, NULL, 0, NULL);
+	xTaskCreate(TaskCANOpenManager, "CANOpen Manager", 512, NULL, 2, NULL);
+	xTaskCreate(TaskCANOpenProcessPDO, "CANOpen PDO Processor", 512, NULL, 0, NULL);
 
-	 TIMER_SetCallBack(Tick);
+	TIMER_SetCallBack(Tick);
 }
 
 static void TaskCANOpenProcessPDO(void* arg)
@@ -53,9 +53,9 @@ static void TaskCANOpenProcessPDO(void* arg)
 		label = finalResult.label;
 		accuracy = finalResult.accuracy;
 
-	    MCO_WriteProcessData(P600001_VC_Command, 1, &(label));
+		MCO_WriteProcessData(P600001_VC_Command, 1, &(label));
 
-	    MCO_WriteProcessData(P600002_VC_Accuracy, 1, &(accuracy));
+		MCO_WriteProcessData(P600002_VC_Accuracy, 1, &(accuracy));
 	}
 }
 
@@ -67,7 +67,7 @@ static void TaskCANOpenManager(void* arg)
 	NMTReset = TRUE;
 	NMT_ResetDelay = MCOHW_GetTime() + 500;
 
-	 MCOUSER_ResetCommunication();
+	MCOUSER_ResetCommunication();
 
 	for(;;)
 	{
