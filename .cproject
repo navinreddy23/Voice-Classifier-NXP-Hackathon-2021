@@ -614,8 +614,8 @@
 								<option id="com.crt.advproject.cpp.stackusage.1697224868" name="Generate Stack Usage Info (-fstack-usage)" superClass="com.crt.advproject.cpp.stackusage" useByScannerDiscovery="false"/>
 								<option id="com.crt.advproject.cpp.config.478144380" name="Obsolete (Config)" superClass="com.crt.advproject.cpp.config" useByScannerDiscovery="false"/>
 								<option id="com.crt.advproject.cpp.store.257402465" name="Obsolete (Store)" superClass="com.crt.advproject.cpp.store" useByScannerDiscovery="false"/>
-								<option id="com.crt.advproject.cpp.exe.release.option.optimization.level.1442813260" superClass="com.crt.advproject.cpp.exe.release.option.optimization.level"/>
-								<option id="com.crt.advproject.cpp.exe.release.option.debugging.level.1152418496" superClass="com.crt.advproject.cpp.exe.release.option.debugging.level"/>
+								<option id="com.crt.advproject.cpp.exe.release.option.optimization.level.1442813260" superClass="com.crt.advproject.cpp.exe.release.option.optimization.level" useByScannerDiscovery="true"/>
+								<option id="com.crt.advproject.cpp.exe.release.option.debugging.level.1152418496" superClass="com.crt.advproject.cpp.exe.release.option.debugging.level" useByScannerDiscovery="false"/>
 								<inputType id="com.crt.advproject.compiler.cpp.input.1611185228" superClass="com.crt.advproject.compiler.cpp.input"/>
 							</tool>
 							<tool id="com.crt.advproject.gcc.exe.release.425566652" name="MCU C Compiler" superClass="com.crt.advproject.gcc.exe.release">
@@ -729,8 +729,8 @@
 								<option id="com.crt.advproject.gcc.stackusage.1737713482" name="Generate Stack Usage Info (-fstack-usage)" superClass="com.crt.advproject.gcc.stackusage" useByScannerDiscovery="false"/>
 								<option id="com.crt.advproject.gcc.config.572422975" name="Obsolete (Config)" superClass="com.crt.advproject.gcc.config" useByScannerDiscovery="false"/>
 								<option id="com.crt.advproject.gcc.store.757570062" name="Obsolete (Store)" superClass="com.crt.advproject.gcc.store" useByScannerDiscovery="false"/>
-								<option id="com.crt.advproject.gcc.exe.release.option.optimization.level.435630053" superClass="com.crt.advproject.gcc.exe.release.option.optimization.level"/>
-								<option id="com.crt.advproject.gcc.exe.release.option.debugging.level.435745798" superClass="com.crt.advproject.gcc.exe.release.option.debugging.level"/>
+								<option id="com.crt.advproject.gcc.exe.release.option.optimization.level.435630053" superClass="com.crt.advproject.gcc.exe.release.option.optimization.level" useByScannerDiscovery="true"/>
+								<option id="com.crt.advproject.gcc.exe.release.option.debugging.level.435745798" superClass="com.crt.advproject.gcc.exe.release.option.debugging.level" useByScannerDiscovery="false"/>
 								<inputType id="com.crt.advproject.compiler.input.29073973" superClass="com.crt.advproject.compiler.input"/>
 							</tool>
 							<tool id="com.crt.advproject.gas.exe.release.1544364371" name="MCU Assembler" superClass="com.crt.advproject.gas.exe.release">
