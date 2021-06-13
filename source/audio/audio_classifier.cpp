@@ -123,7 +123,7 @@ static void CallbackOnRx(uint8* buffer)
 
 static void PrintResults(ei_impulse_result_t* pRes, uint8_t topMatch)
 {
-	PRINTF("----------------------------------------\r\n");
+	PRINTF("\r\n----------------------------------------\r\n");
 	PRINTF("       DSP: %d ms.\r\n", pRes->timing.dsp);
 	PRINTF("       Classification: %d ms.\r\n", pRes->timing.classification);
 	PRINTF("       Label: %s\r\n", pRes->classification[topMatch].label);
