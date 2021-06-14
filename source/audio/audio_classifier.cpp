@@ -21,7 +21,7 @@ static int AudioToSignal(size_t offset, size_t length, float *pOutBuffer);
 static void TaskAudioClassifier(void* arg);
 static uint8_t FilterResults(float*, size_t, results_classifier_t*);
 static void CallbackOnRx(uint8* pBuffer);
-static void PrintResults(ei_impulse_result_t* pRes, uint8_t topMatch);
+static void PrintResults(ei_impulse_result_t* pRes, size_t topMatch);
 
 /*******************************************************************************
  * Variables
@@ -68,7 +68,7 @@ static void TaskAudioClassifier(void* arg)
 
 	for(;;)
 	{
-		xTaskNotifyWait(0,0,&notification,portMAX_DELAY);
+		xTaskNotifyWait(0, 0, &notification, portMAX_DELAY);
 
 		AUDIO_DMA_Receive();
 
@@ -152,7 +152,7 @@ static void CallbackOnRx(uint8* pBuffer)
 /**
  * @brief Formats and prints the results to the terminal.
  */
-static void PrintResults(ei_impulse_result_t* pRes, uint8_t topMatch)
+static void PrintResults(ei_impulse_result_t* pRes, size_t topMatch)
 {
 	PRINTF("\r\n----------------------------------------\r\n");
 	PRINTF("       DSP: %d ms.\r\n", pRes->timing.dsp);

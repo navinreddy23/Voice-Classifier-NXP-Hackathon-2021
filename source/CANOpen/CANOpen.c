@@ -25,12 +25,14 @@ static void Tick(void);
 /*******************************************************************************
  * Variables
  ******************************************************************************/
-extern QueueHandle_t qResults; //Defined in audio_classifier.cpp
+extern QueueHandle_t qResults; //Defined in audio_classifier.cpp, declared here.
 
 /*******************************************************************************
  * Code
  ******************************************************************************/
-
+/**
+ * @brief Create two tasks and register a timer callback function.
+ */
 void CANOpen_Init(void* arg)
 {
 	xTaskCreate(TaskCANOpenManager, "CANOpen Manager", 512, NULL, 2, NULL);
@@ -39,6 +41,11 @@ void CANOpen_Init(void* arg)
 	TIMER_SetCallBack(Tick);
 }
 
+/**
+ * @brief This task waits on the queue until the results are updated
+ * 				in the queue by the Audio Classifier task. These results are
+ * 				updated in the CANopen network.
+ */
 static void TaskCANOpenProcessPDO(void* arg)
 {
 	results_classifier_t finalResult = {0};
@@ -53,12 +60,17 @@ static void TaskCANOpenProcessPDO(void* arg)
 		label = finalResult.label;
 		accuracy = finalResult.accuracy;
 
+		//Write the command/label that was classified.
 		MCO_WriteProcessData(P600001_VC_Command, 1, &(label));
 
+		//Write the accuracy of the label.
 		MCO_WriteProcessData(P600002_VC_Accuracy, 1, &(accuracy));
 	}
 }
 
+/**
+ * @brief Task to handle the CANopen network as a manager.
+ */
 static void TaskCANOpenManager(void* arg)
 {
 	uint8_t NMTReset = TRUE; // reset all slave nodes once
@@ -76,6 +88,7 @@ static void TaskCANOpenManager(void* arg)
 
 		// Application is processed in TaskCANOpenProcessPDO()
 
+		//Process only when the state is operational.
 		if (MY_NMT_STATE == NMTSTATE_OP)
 		{
 			MGR_ProcessMgr();
@@ -92,6 +105,10 @@ static void TaskCANOpenManager(void* arg)
 	}
 }
 
+/**
+ * @brief This function provides a periodic tick of 1ms to
+ * 				the CANopen stack.
+ */
 static void Tick(void)
 {
 	MCOHW_Tick();

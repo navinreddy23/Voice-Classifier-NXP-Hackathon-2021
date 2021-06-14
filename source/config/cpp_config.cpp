@@ -61,9 +61,12 @@ void operator delete[](void *p)
     free(p);
 }
 
+/*****************************************************************
+ * 									EDGE IMPULSE PORTING: START
+ ****************************************************************/
 void DebugLog(const char* s)
 {
-
+	;
 }
 
 void *ei_malloc(size_t size)
@@ -116,6 +119,10 @@ void ei_printf_float(float f)
 {
 	PRINTF("%f", f);
 }
+
+/*****************************************************************
+ * 									EDGE IMPULSE PORTING: END
+ ****************************************************************/
 
 extern "C" int __aeabi_atexit(void *object,
 		void (*destructor)(void *),

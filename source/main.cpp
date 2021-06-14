@@ -62,7 +62,7 @@ extern "C" void vApplicationStackOverflowHook (TaskHandle_t xTask,
 
 /***
  * @brief Application entry point
- * 				Initialises HW and Starts the OS
+ * 				Initialises HW and Application tasks and Starts the OS
  */
 int main(void)
 {
@@ -104,7 +104,7 @@ static void InitializeHardware(void)
 extern "C"
 {
 /**
- * @brief FreeRTOS hook function for catching stack overflow
+ * @brief FreeRTOS hook function for catching stack overflow.
  */
 void vApplicationStackOverflowHook (TaskHandle_t xTask, signed char *pcTaskName)
 {

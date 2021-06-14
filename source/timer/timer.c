@@ -87,6 +87,7 @@ void TIMER_Init(void)
 
 /**
  * @brief Returns the number of milliseconds elapsed since the system start.
+ * @return uint32 time value.
  */
 uint32_t TIMER_GetTimeInMs()
 {
@@ -94,7 +95,7 @@ uint32_t TIMER_GetTimeInMs()
 }
 
 /**
- * @brief Register callback on timeout.
+ * @brief Register a function for a callback on timeout.
  */
 void TIMER_SetCallBack(cb_timer_handle_t funcPtr)
 {
