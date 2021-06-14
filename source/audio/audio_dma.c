@@ -129,19 +129,9 @@ static uint8_t bufIndex = 0;
 /*******************************************************************************
  * Code
  ******************************************************************************/
-
-static void BOARD_EnableSaiMclkOutput(bool enable)
-{
-	if (enable)
-	{
-		IOMUXC_GPR->GPR1 |= IOMUXC_GPR_GPR1_SAI1_MCLK_DIR_MASK;
-	}
-	else
-	{
-		IOMUXC_GPR->GPR1 &= (~IOMUXC_GPR_GPR1_SAI1_MCLK_DIR_MASK);
-	}
-}
-
+/**
+ * @brief Audio Rx complete ISR Callback function.
+ */
 static void RxCallbackFromISR(I2S_Type *base, sai_edma_handle_t *handle, status_t status, void *userData)
 {
 	if (kStatus_SAI_RxError == status)
@@ -149,22 +139,31 @@ static void RxCallbackFromISR(I2S_Type *base, sai_edma_handle_t *handle, status_
 		/* Handle the error. */
 	}
 
+	/* Call the specified callback function to notify Rx complete and pass
+	   the buffer pointer */
 	if(cbFuncOnRxCplt != NULL)
 	{
 		cbFuncOnRxCplt(Buffer + (bufIndex * AUDIO_NUM * BUFFER_SIZE));
 	}
 
+	// Increment or reset the buffer index.
 	if(++bufIndex == BUFFER_NUMBER)
 	{
 		bufIndex = 0;
 	}
 }
 
+/**
+ * @brief Audio Tx complete ISR Callback function
+ */
 static void TxCallbackFromISR(I2S_Type *base, sai_edma_handle_t *handle, status_t status, void *userData)
 {
 	;
 }
 
+/**
+ * @brief Configure and initialise SAI, DMA channel and Audio CODEC
+ */
 void AUDIO_DMA_Init(void)
 {
 	CLOCK_InitAudioPll(&audioPllConfig);
@@ -228,16 +227,24 @@ void AUDIO_DMA_Init(void)
 	}
 }
 
+/**
+ * @brief Function call to start recording the audio.
+ * @note  The sample is predetermined using macros.
+ */
 void AUDIO_DMA_Receive(void)
 {
 	xfer.data     = Buffer + (bufIndex * BUFFER_SIZE * AUDIO_NUM);
 	xfer.dataSize = BUFFER_SIZE * AUDIO_NUM;
-	if (kStatus_Success == SAI_TransferReceiveEDMA(AUDIO_SAI_INSTANCE, &rxHandle, &xfer))
+	if (kStatus_Success != SAI_TransferReceiveEDMA(AUDIO_SAI_INSTANCE, &rxHandle, &xfer))
 	{
-		//Handle error, if necessary.
+		assert(true);
 	}
 }
 
+/**
+ * @brief Function call to playback the recorded audio.
+ * @note  The sample is predetermined using macros.
+ */
 void AUDIO_DMA_Transfer(uint8_t* buffer)
 {
 	xfer.data     = buffer;
@@ -245,7 +252,25 @@ void AUDIO_DMA_Transfer(uint8_t* buffer)
 	SAI_TransferSendEDMA(AUDIO_SAI_INSTANCE, &txHandle, &xfer);
 }
 
+/**
+ * @brief Function to set the callback on rx complete.
+ */
 void AUDIO_DMA_SetCallBack(cb_rx_handle_t cbFuncPtr)
 {
 	cbFuncOnRxCplt = (cb_rx_handle_t)cbFuncPtr;
+}
+
+/**
+ * @brief CLock setup for SAI peripheral
+ */
+static void BOARD_EnableSaiMclkOutput(bool enable)
+{
+	if (enable)
+	{
+		IOMUXC_GPR->GPR1 |= IOMUXC_GPR_GPR1_SAI1_MCLK_DIR_MASK;
+	}
+	else
+	{
+		IOMUXC_GPR->GPR1 &= (~IOMUXC_GPR_GPR1_SAI1_MCLK_DIR_MASK);
+	}
 }

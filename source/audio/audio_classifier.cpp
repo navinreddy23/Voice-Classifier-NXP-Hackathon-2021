@@ -4,10 +4,9 @@
  *  Created on: 28 May 2021
  *      Author: navin
  */
-
-#include "audio_dma.h"
 #include "fsl_debug_console.h"
 
+#include "audio_dma.h"
 #include "audio_classifier.h"
 #include "edge-impulse-sdk/classifier/ei_run_classifier.h"
 
@@ -20,27 +19,35 @@
  ******************************************************************************/
 static int AudioToSignal(size_t offset, size_t length, float *pOutBuffer);
 static void TaskAudioClassifier(void* arg);
-static uint8_t FilteResults(float*, size_t, results_classifier_t*);
-static void CallbackOnRx(uint8* buffer);
+static uint8_t FilterResults(float*, size_t, results_classifier_t*);
+static void CallbackOnRx(uint8* pBuffer);
 static void PrintResults(ei_impulse_result_t* pRes, uint8_t topMatch);
 
 /*******************************************************************************
  * Variables
  ******************************************************************************/
 static int16_t *pBuf = NULL;
-static TaskHandle_t hClassifier;
+static TaskHandle_t hTaskClassifier;
 QueueHandle_t qResults;
 
 /*******************************************************************************
  * Code
  *******************************************************************************/
-
+/**
+ * @brief Create Audio Classifier tasks and the result queue.
+ */
 void AUDIO_Classifier_Init(void* arg)
 {
-	xTaskCreate(TaskAudioClassifier, "EI Classifier", 512, NULL, 1, &hClassifier);
+	xTaskCreate(TaskAudioClassifier, "Audio Classifier", 512, NULL, 1, &hTaskClassifier);
 	qResults = xQueueCreate(2, sizeof( results_classifier_t ) );
 }
 
+/**
+ * @brief This task initiates audio recording, and waits for the notification.
+ * 				Upon receiving the notification, it classifies the audio sample and
+ * 				puts the results in a queue. These results are sent over the CANopen network.
+ *
+ */
 static void TaskAudioClassifier(void* arg)
 {
 	uint32_t notification;
@@ -76,7 +83,7 @@ static void TaskAudioClassifier(void* arg)
 			keyword_accuracy[ix] =  result.classification[ix].value;
 		}
 
-		topMatch = FilteResults(keyword_accuracy, EI_CLASSIFIER_LABEL_COUNT, &finalResult);
+		topMatch = FilterResults(keyword_accuracy, EI_CLASSIFIER_LABEL_COUNT, &finalResult);
 
 		//Send results to CANOpen PDO task through the Queue.
 		xQueueSend(qResults, &finalResult, 0);
@@ -85,12 +92,18 @@ static void TaskAudioClassifier(void* arg)
 	}
 }
 
-static uint8_t FilteResults(float* pKeyAccuracies, size_t size, results_classifier_t* pRes)
+/**
+ * @brief Get the best results from an array.
+ * @param pKeyAccuracies pointer to the array
+ * @param len Length of the array
+ * @param pRes Pointer to the results structure.
+ */
+static uint8_t FilterResults(float* pKeyAccuracies, size_t len, results_classifier_t* pRes)
 {
 	uint8_t topMatch = 0;
 	float highestAccuracy = 0.0;
 
-	for(uint8_t i = 0; i < size; i++)
+	for(size_t i = 0; i < len; i++)
 	{
 		if(pKeyAccuracies[i] > highestAccuracy)
 		{
@@ -105,6 +118,14 @@ static uint8_t FilteResults(float* pKeyAccuracies, size_t size, results_classifi
 	return topMatch;
 }
 
+/**
+ * @brief This function converts the int16_t value to float.
+ * 				It is necessary for Edge Impulse SDK as the run_classifier()
+ * 				accepts in this format.
+ * @param offset Internal to Edge Impulse SDK
+ * @param length Internal to Edge Impulse SDK
+ * @param pOutBuffer Pointer to output buffer. Also internal to EI SDK.
+ */
 static int AudioToSignal(size_t offset, size_t length, float *pOutBuffer)
 {
 	numpy::int16_to_float(&pBuf[offset], pOutBuffer, length);
@@ -112,15 +133,25 @@ static int AudioToSignal(size_t offset, size_t length, float *pOutBuffer)
 	return 0;
 }
 
-static void CallbackOnRx(uint8* buffer)
+/**
+ * @brief This function is called when the audio is ready in the buffer.
+ * 				Upon receiving the audio it notifies the Audio Classifier task to
+ * 				wake-up and start classification.
+ * @param pBuffer The pointer to the audio sample recorded.
+ * @note It is possible to listen to the audio by uncommenting the last line.
+ */
+static void CallbackOnRx(uint8* pBuffer)
 {
 	BaseType_t pxHigherPriorityTaskWoken = pdTRUE;
-	pBuf = (int16_t*)buffer;
+	pBuf = (int16_t*)pBuffer;
 
-	xTaskNotifyFromISR(hClassifier, 0, eNoAction, &pxHigherPriorityTaskWoken);
-	//AUDIO_DMA_Transfer(buffer);
+	xTaskNotifyFromISR(hTaskClassifier, 0, eNoAction, &pxHigherPriorityTaskWoken);
+	//AUDIO_DMA_Transfer(pBuffer);
 }
 
+/**
+ * @brief Formats and prints the results to the terminal.
+ */
 static void PrintResults(ei_impulse_result_t* pRes, uint8_t topMatch)
 {
 	PRINTF("\r\n----------------------------------------\r\n");

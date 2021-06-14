@@ -17,7 +17,7 @@ extern "C" {
  ******************************************************************************/
 typedef void(*cb_timer_handle_t)(void);
 
-void TIMER_Init();
+void TIMER_Init(void);
 uint32_t TIMER_GetTimeInMs(void);
 void TIMER_SetCallBack(cb_timer_handle_t funcPtr);
 

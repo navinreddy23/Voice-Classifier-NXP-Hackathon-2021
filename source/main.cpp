@@ -60,21 +60,20 @@ extern "C" void vApplicationStackOverflowHook (TaskHandle_t xTask,
  * Code
  ******************************************************************************/
 
-/*
- * @brief   Application entry point.
+/***
+ * @brief Application entry point
+ * 				Initialises HW and Starts the OS
  */
 int main(void)
 {
-	/* Init board hardware. */
 	InitializeHardware();
 
+	PRINTF("Core Clock frequency: %u MHz\r\n", SystemCoreClock/1000/1000);
 	PRINTF("\r\nInitialized hardware - AUDIO-DMA, CAN, TIMER, and UART\r\n");
 
+	//Create tasks and queues.
 	CANOpen_Init(NULL);
-
 	AUDIO_Classifier_Init(NULL);
-
-	PRINTF("Core Clock freq: %u MHz\r\n", SystemCoreClock/1000/1000);
 
 	PRINTF("\r\nStarting OS...\r\n");
 
@@ -82,9 +81,13 @@ int main(void)
 
 	while(1);
 
-	return 0 ;
+	return 0;
 }
 
+/**
+ * @brief Initialize all the peripherals that are necessary.
+ * 				Baud rate for UART is set to 460800 bps.
+ */
 static void InitializeHardware(void)
 {
 	BOARD_ConfigMPU();
@@ -100,6 +103,9 @@ static void InitializeHardware(void)
 
 extern "C"
 {
+/**
+ * @brief FreeRTOS hook function for catching stack overflow
+ */
 void vApplicationStackOverflowHook (TaskHandle_t xTask, signed char *pcTaskName)
 {
 	(void)xTask;

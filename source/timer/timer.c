@@ -42,6 +42,9 @@ static cb_timer_handle_t cbTimerTick;
 /*******************************************************************************
  * Code
  ******************************************************************************/
+/**
+ * @brief ISR for QTMR
+ */
 void QTMR_IRQ_HANDLER(void)
 {
 	msTicks++;
@@ -57,7 +60,10 @@ void QTMR_IRQ_HANDLER(void)
 	SDK_ISR_EXIT_BARRIER;
 }
 
-void TIMER_Init()
+/**
+ * @brief Init the timer to generate an interrupt every 1 millisecond.
+ */
+void TIMER_Init(void)
 {
 	qtmr_config_t qtmrConfig;
 
@@ -79,11 +85,17 @@ void TIMER_Init()
 	QTMR_StartTimer(BOARD_QTMR_BASEADDR, BOARD_SECOND_QTMR_CHANNEL, kQTMR_PriSrcRiseEdge);
 }
 
+/**
+ * @brief Returns the number of milliseconds elapsed since the system start.
+ */
 uint32_t TIMER_GetTimeInMs()
 {
 	return msTicks;
 }
 
+/**
+ * @brief Register callback on timeout.
+ */
 void TIMER_SetCallBack(cb_timer_handle_t funcPtr)
 {
 	cbTimerTick = funcPtr;
