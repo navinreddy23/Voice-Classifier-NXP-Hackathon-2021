@@ -15,6 +15,10 @@
 #include "queue.h"
 
 /*******************************************************************************
+ * Defines
+ ******************************************************************************/
+#define MEDIUM_PRIORITY	1
+/*******************************************************************************
  * Prototypes
  ******************************************************************************/
 static int AudioToSignal(size_t offset, size_t length, float *pOutBuffer);
@@ -38,7 +42,7 @@ QueueHandle_t qResults;
  */
 void AUDIO_Classifier_Init(void* arg)
 {
-	xTaskCreate(TaskAudioClassifier, "Audio Classifier", 512, NULL, 1, &hTaskClassifier);
+	xTaskCreate(TaskAudioClassifier, "Audio Classifier", 512, NULL, MEDIUM_PRIORITY, &hTaskClassifier);
 	qResults = xQueueCreate(2, sizeof( results_classifier_t ) );
 }
 
@@ -46,7 +50,6 @@ void AUDIO_Classifier_Init(void* arg)
  * @brief This task initiates audio recording, and waits for the notification.
  * 				Upon receiving the notification, it classifies the audio sample and
  * 				puts the results in a queue. These results are sent over the CANopen network.
- *
  */
 static void TaskAudioClassifier(void* arg)
 {
@@ -61,6 +64,7 @@ static void TaskAudioClassifier(void* arg)
 	float keyword_accuracy[EI_CLASSIFIER_LABEL_COUNT] = {0};
 
 	AUDIO_DMA_SetCallBack(&CallbackOnRx);
+	//Start receiving audio sample.
 	AUDIO_DMA_Receive();
 
 	signal.total_length = EI_CLASSIFIER_RAW_SAMPLE_COUNT;

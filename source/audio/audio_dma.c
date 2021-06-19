@@ -69,11 +69,11 @@
 
 #define BOARD_MASTER_CLOCK_CONFIG()
 
-#define AUDIO_SAMPLES 			16U
+#define AUDIO_SAMPLES 				16U
 #define AUDIO_RESOLUTION	  	2U
-#define AUDIO_NUM	  			(AUDIO_SAMPLES  *AUDIO_RESOLUTION)
-#define BUFFER_SIZE   			(1000U)
-#define BUFFER_NUMBER 			(2U)
+#define AUDIO_NUM	  					(AUDIO_SAMPLES  * AUDIO_RESOLUTION)
+#define BUFFER_SIZE   				(1000U)
+#define BUFFER_NUMBER 				(2U)
 
 /*******************************************************************************
  * Prototypes

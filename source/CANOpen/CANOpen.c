@@ -15,7 +15,11 @@
 #include "FreeRTOS.h"
 #include "task.h"
 #include "queue.h"
-
+/*******************************************************************************
+ * Defines
+ ******************************************************************************/
+#define HIGH_PRIORITY  		2
+#define DEFAULT_PRIORITY	0
 /*******************************************************************************
  * Prototypes
  ******************************************************************************/
@@ -35,8 +39,8 @@ extern QueueHandle_t qResults; //Defined in audio_classifier.cpp, declared here.
  */
 void CANOpen_Init(void* arg)
 {
-	xTaskCreate(TaskCANOpenManager, "CANOpen Manager", 512, NULL, 2, NULL);
-	xTaskCreate(TaskCANOpenProcessPDO, "CANOpen PDO Processor", 512, NULL, 0, NULL);
+	xTaskCreate(TaskCANOpenManager, "CANOpen Manager", 512, NULL, HIGH_PRIORITY, NULL);
+	xTaskCreate(TaskCANOpenProcessPDO, "CANOpen PDO Processor", 512, NULL, DEFAULT_PRIORITY, NULL);
 
 	TIMER_SetCallBack(Tick);
 }
