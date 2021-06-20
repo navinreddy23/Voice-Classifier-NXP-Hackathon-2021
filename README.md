@@ -8,7 +8,7 @@ Youtube Playlist: https://www.youtube.com/playlist?list=PLHGgmp1-Stru1Ea7XLVaZtV
 
 ## Pictures
 
-![Project Picture]()
+![Project Picture](https://github.com/navinreddy23/Voice-Classifier-NXP-Hackathon-2021/blob/master/Pictures/NXP_Hackathon_Profile.PNG)
 
 ### System level diagram
 ![System diagram](https://github.com/navinreddy23/Voice-Classifier-NXP-Hackathon-2021/blob/master/Pictures/JARVIS.png)
